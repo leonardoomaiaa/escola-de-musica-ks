@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESCOLA DE MÚSICA KS - Sistema de Gestão e Cadastro Musical</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Supabase JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+  </style>
+<script src="/_aistudio-iframe.js?v=1f94f900"></script></head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-violet-500/30">
+
+  <!-- TOP BAR -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-[#daa520]/20 border border-[#daa520]/40 flex items-center justify-center text-[#daa520]">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12 0c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+          </svg>
+        </div>
+        <div>
+          <span class="text-lg font-bold text-white tracking-tight">ESCOLA DE MÚSICA KS</span>
+          <span class="text-xs text-slate-400 block -mt-1">Gestão Musical & Cadastro</span>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="hidden md:flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+        <button onclick="switchTab('alunos')" id="tab-btn-alunos" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold text-black bg-[#daa520] shadow-md shadow-[#daa520]/20 transition-colors">
+          Alunos
+        </button>
+        <button onclick="switchTab('professores')" id="tab-btn-professores" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors">
+          Professores
+        </button>
+        <button onclick="switchTab('aniversariantes')" id="tab-btn-aniversariantes" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors">
+          Aniversariantes
+        </button>
+        <button onclick="switchTab('pagamentos')" id="tab-btn-pagamentos" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors">
+          Confirmação de Pagamento
+        </button>
+        <button onclick="switchTab('historico')" id="tab-btn-historico" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors">
+          Histórico de Pagamentos
+        </button>
+      </nav>
+
+      <!-- Supabase Setup Button -->
+      <div class="flex items-center gap-3">
+        <button onclick="openSupabaseModal()" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors">
+          <span id="supabase-status-indicator" class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>Supabase Config</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Subnav -->
+  <div class="md:hidden border-b border-slate-800 bg-slate-900 px-4 py-2 flex items-center gap-2 overflow-x-auto text-xs">
+    <button onclick="switchTab('alunos')" id="mob-tab-alunos" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-[#daa520] text-black font-bold shadow-sm">Alunos</button>
+    <button onclick="switchTab('professores')" id="mob-tab-professores" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300 font-medium">Professores</button>
+    <button onclick="switchTab('aniversariantes')" id="mob-tab-aniversariantes" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300 font-medium">Aniversariantes</button>
+    <button onclick="switchTab('pagamentos')" id="mob-tab-pagamentos" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300 font-medium">Pagamentos</button>
+    <button onclick="switchTab('historico')" id="mob-tab-historico" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300 font-medium">Histórico</button>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+
+    <!-- ==================================================== -->
+    <!-- ABA 1: CADASTRO DE ALUNOS -->
+    <!-- ==================================================== -->
+    <div id="view-alunos" class="space-y-8">
+      <!-- Cabeçalho da Seção -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-bold tracking-tight text-white font-display">Cadastro de Alunos</h2>
+          <p class="text-sm text-slate-400">Gerencie a matrícula, dados pessoais e informações musicais de cada aluno.</p>
+        </div>
+        <button onclick="openAlunoForm()" class="self-start sm:self-auto flex items-center gap-2 px-4 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition shadow-lg shadow-violet-600/20">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          Novo Aluno
+        </button>
+      </div>
+
+      <!-- Filtros da Tabela -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-900 p-4 rounded-xl border border-slate-800">
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Buscar por Nome ou Email</label>
+          <input type="text" id="filtro-aluno-busca" oninput="renderAlunosTable()" placeholder="Digite para filtrar..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-violet-500">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Turno</label>
+          <select id="filtro-aluno-turno" onchange="renderAlunosTable()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-violet-500">
+            <option value="">Todos os Turnos</option>
+            <option value="Manhã">Manhã</option>
+            <option value="Tarde">Tarde</option>
+            <option value="Noite">Noite</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Instrumento</label>
+          <select id="filtro-aluno-instrumento" onchange="renderAlunosTable()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-violet-500">
+            <option value="">Todos os Instrumentos</option>
+            <option value="Piano">Piano</option>
+            <option value="Teclado">Teclado</option>
+            <option value="Violão Clássico">Violão Clássico</option>
+            <option value="Violão Popular">Violão Popular</option>
+            <option value="Guitarra Elétrica">Guitarra Elétrica</option>
+            <option value="Contrabaixo">Contrabaixo</option>
+            <option value="Bateria">Bateria</option>
+            <option value="Canto / Técnica Vocal">Canto / Técnica Vocal</option>
+            <option value="Violino">Violino</option>
+            <option value="Violoncelo">Violoncelo</option>
+            <option value="Saxofone">Saxofone</option>
+            <option value="Flauta Transversal">Flauta Transversal</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Tabela de Alunos -->
+      <div class="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-300">
+            <thead class="bg-slate-950/80 text-xs uppercase tracking-wider text-slate-400 border-b border-slate-800">
+              <tr>
+                <th class="py-3.5 px-4">Aluno</th>
+                <th class="py-3.5 px-4">Idade / Nasc.</th>
+                <th class="py-3.5 px-4">Instrumento</th>
+                <th class="py-3.5 px-4">Turno / Horário</th>
+                <th class="py-3.5 px-4">Contato / Cidade</th>
+                <th class="py-3.5 px-4 text-right">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="alunos-table-body" class="divide-y divide-slate-800/60 font-normal">
+              <!-- Renderizado via JS -->
+            </tbody>
+          </table>
+        </div>
+        <div id="alunos-empty" class="hidden p-8 text-center text-slate-500 text-sm">
+          Nenhum aluno cadastrado ou encontrado com os filtros atuais.
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================== -->
+    <!-- ABA 2: CADASTRO DE PROFESSORES -->
+    <!-- ==================================================== -->
+    <div id="view-professores" class="hidden space-y-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-bold tracking-tight text-white font-display">Cadastro de Professores</h2>
+          <p class="text-sm text-slate-400">Cadastre os instrutores musicais, seus turnos, disciplinas e valor da mensalidade.</p>
+        </div>
+        <button onclick="openProfessorForm()" class="self-start sm:self-auto flex items-center gap-2 px-4 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition shadow-lg shadow-violet-600/20">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          Novo Professor
+        </button>
+      </div>
+
+      <div class="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-300">
+            <thead class="bg-slate-950/80 text-xs uppercase tracking-wider text-slate-400 border-b border-slate-800">
+              <tr>
+                <th class="py-3.5 px-4">Professor</th>
+                <th class="py-3.5 px-4">Instrumento</th>
+                <th class="py-3.5 px-4">Turno & Horário</th>
+                <th class="py-3.5 px-4">Data Início</th>
+                <th class="py-3.5 px-4 text-right">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="professores-table-body" class="divide-y divide-slate-800/60 font-normal">
+              <!-- Renderizado via JS -->
+            </tbody>
+          </table>
+        </div>
+        <div id="professores-empty" class="hidden p-8 text-center text-slate-500 text-sm">
+          Nenhum professor cadastrado ainda.
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================== -->
+    <!-- ABA 3: ANIVERSARIANTES DO MÊS (TELA 1) -->
+    <!-- ==================================================== -->
+    <div id="view-aniversariantes" class="hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-bold tracking-tight text-white font-display">Aniversariantes</h2>
+          <p class="text-sm text-slate-400">Listagem automática dos alunos que celebram aniversário no mês selecionado.</p>
+        </div>
+        <div class="flex items-center gap-3 bg-slate-900 border border-slate-800 px-3 py-2 rounded-xl">
+          <span class="text-xs text-slate-400">Mês de Referência:</span>
+          <select id="select-mes-aniversario" onchange="renderAniversariantes()" class="bg-slate-950 text-white font-semibold text-sm border border-slate-700 rounded-lg px-2.5 py-1 focus:outline-none focus:border-violet-500">
+            <option value="1">Janeiro</option>
+            <option value="2">Fevereiro</option>
+            <option value="3">Março</option>
+            <option value="4">Abril</option>
+            <option value="5">Maio</option>
+            <option value="6">Junho</option>
+            <option value="7">Julho</option>
+            <option value="8">Agosto</option>
+            <option value="9">Setembro</option>
+            <option value="10">Outubro</option>
+            <option value="11" selected>Novembro</option>
+            <option value="12">Dezembro</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Grid de Cartões de Aniversariantes -->
+      <div id="aniversariantes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+      <div id="aniversariantes-empty" class="hidden bg-slate-900 rounded-2xl border border-slate-800 p-12 text-center">
+        <svg class="w-12 h-12 text-slate-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h10z"/></svg>
+        <p class="text-base text-slate-300 font-medium">Nenhum aluno faz aniversário neste mês</p>
+        <p class="text-xs text-slate-500 mt-1">Experimente alternar o mês no seletor acima.</p>
+      </div>
+    </div>
+
+    <!-- ==================================================== -->
+    <!-- ABA 4: CONFIRMAÇÃO DE PAGAMENTO (TELA 2) -->
+    <!-- ==================================================== -->
+    <div id="view-pagamentos" class="hidden space-y-6">
+      <div>
+        <h2 class="text-2xl font-bold tracking-tight text-white font-display">Confirmação de Pagamento</h2>
+        <p class="text-sm text-slate-400">Selecione o turno e o horário para visualizar os alunos em ordem alfabética e confirmar os pagamentos.</p>
+      </div>
+
+      <!-- Seletores de Turno, Horário e Busca -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-5">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5">1. Selecione o Turno</label>
+          <div class="grid grid-cols-3 gap-3">
+            <button onclick="setTurnoPagamento('Manhã')" id="btn-turno-manha" class="turno-btn py-3 px-4 rounded-xl border border-[#daa520] bg-[#daa520] text-black font-bold text-sm shadow-md shadow-[#daa520]/20 transition-all flex items-center justify-center gap-2">
+              <span>🌅 Manhã</span>
+            </button>
+            <button onclick="setTurnoPagamento('Tarde')" id="btn-turno-tarde" class="turno-btn py-3 px-4 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 hover:text-slate-200 font-medium text-sm transition-all flex items-center justify-center gap-2">
+              <span>☀️ Tarde</span>
+            </button>
+            <button onclick="setTurnoPagamento('Noite')" id="btn-turno-noite" class="turno-btn py-3 px-4 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 hover:text-slate-200 font-medium text-sm transition-all flex items-center justify-center gap-2">
+              <span>🌙 Noite</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-800">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">2. Selecione o Horário</label>
+            <select id="select-horario-pagamento" onchange="renderPagamentosTable()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 font-semibold focus:outline-none focus:border-[#daa520]">
+              <!-- Preenchido dinamicamente de acordo com o turno -->
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Mês de Referência Padrão</label>
+            <div class="flex items-center gap-2 bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-1.5">
+              <svg class="w-4 h-4 text-[#daa520] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              <select id="select-mes-pagamento" onchange="renderPagamentosTable()" class="w-full bg-transparent text-white font-semibold text-sm focus:outline-none">
+                <option value="Janeiro/2026">Janeiro</option>
+                <option value="Fevereiro/2026">Fevereiro</option>
+                <option value="Março/2026">Março</option>
+                <option value="Abril/2026">Abril</option>
+                <option value="Maio/2026">Maio</option>
+                <option value="Junho/2026">Junho</option>
+                <option value="Julho/2026">Julho</option>
+                <option value="Agosto/2026">Agosto</option>
+                <option value="Setembro/2026">Setembro</option>
+                <option value="Outubro/2026">Outubro</option>
+                <option value="Novembro/2026" selected>Novembro (Mês Atual)</option>
+                <option value="Dezembro/2026">Dezembro</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-slate-800">
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Buscar pelo Nome do Aluno</label>
+          <input type="text" id="filtro-pagamento-busca" oninput="renderPagamentosTable()" placeholder="Digite o nome do aluno para filtrar na lista..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-violet-500">
+        </div>
+      </div>
+
+      <!-- Estatísticas do Horário -->
+      <div id="pagamento-stats-bar" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+          <span class="text-xs text-slate-400">Total de Alunos no Horário</span>
+          <span id="stat-total-alunos" class="text-xl font-bold text-white tabular-nums">0</span>
+        </div>
+        <div class="bg-slate-900 border border-emerald-900/30 rounded-xl p-4 flex items-center justify-between">
+          <span class="text-xs text-emerald-400">Mensalidades Pagas</span>
+          <span id="stat-pagos" class="text-xl font-bold text-emerald-400 tabular-nums">0</span>
+        </div>
+        <div class="bg-slate-900 border border-red-900/40 rounded-xl p-4 flex items-center justify-between">
+          <span class="text-xs text-[#ff0000]">Pendentes</span>
+          <span id="stat-pendentes" class="text-xl font-bold text-[#ff0000] tabular-nums">0</span>
+        </div>
+      </div>
+
+      <!-- Lista de 3 Colunas dos Alunos (Nome, Mês, Checkbox Pago) -->
+      <div class="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-300">
+            <thead class="bg-slate-950/80 text-xs uppercase tracking-wider text-slate-400 border-b border-slate-800">
+              <tr>
+                <th class="py-3.5 px-6 font-semibold w-1/2">1. Nome Completo do Aluno</th>
+                <th class="py-3.5 px-6 font-semibold w-1/4">2. Mês de Referência (Data Exata)</th>
+                <th class="py-3.5 px-6 font-semibold w-1/4 text-center">3. Status do Pagamento</th>
+              </tr>
+            </thead>
+            <tbody id="pagamentos-table-body" class="divide-y divide-slate-800/60 font-normal">
+              <!-- Renderizado dinamicamente via JS -->
+            </tbody>
+          </table>
+        </div>
+        <div id="pagamentos-empty" class="hidden p-10 text-center text-slate-500 text-sm">
+          Nenhum aluno matriculado para o turno e horário selecionados.
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================== -->
+    <!-- ABA 5: HISTÓRICO DE PAGAMENTOS -->
+    <!-- ==================================================== -->
+    <div id="view-historico" class="hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-bold tracking-tight text-white font-display">Histórico de Pagamentos</h2>
+          <p class="text-sm text-slate-400">Analise o histórico de pagamentos de meses anteriores de todos os alunos cadastrados.</p>
+        </div>
+        <!-- Seletor Mês de Referência do Histórico -->
+        <div class="flex items-center gap-2 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 self-start sm:self-auto">
+          <svg class="w-4 h-4 text-[#daa520] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <div class="flex flex-col">
+            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Mês de Referência</span>
+            <select id="select-mes-historico" onchange="renderHistoricoTable()" class="bg-transparent text-white font-semibold text-sm focus:outline-none cursor-pointer">
+              <option value="Janeiro/2026">Janeiro/2026</option>
+              <option value="Fevereiro/2026">Fevereiro/2026</option>
+              <option value="Março/2026">Março/2026</option>
+              <option value="Abril/2026">Abril/2026</option>
+              <option value="Maio/2026">Maio/2026</option>
+              <option value="Junho/2026">Junho/2026</option>
+              <option value="Julho/2026">Julho/2026</option>
+              <option value="Agosto/2026">Agosto/2026</option>
+              <option value="Setembro/2026">Setembro/2026</option>
+              <option value="Outubro/2026">Outubro/2026</option>
+              <option value="Novembro/2026" selected>Novembro/2026 (Atual)</option>
+              <option value="Dezembro/2026">Dezembro/2026</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 CAMPOS DE FILTRO: TURNO, HORÁRIO E NOME DO ALUNO -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">1. Turno</label>
+          <select id="filtro-historico-turno" onchange="updateHorariosFiltroHistorico(); renderHistoricoTable();" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 font-medium focus:outline-none focus:border-violet-500">
+            <option value="">Todos os Turnos</option>
+            <option value="Manhã">Manhã</option>
+            <option value="Tarde">Tarde</option>
+            <option value="Noite">Noite</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">2. Horário</label>
+          <select id="filtro-historico-horario" onchange="renderHistoricoTable()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 font-medium focus:outline-none focus:border-violet-500">
+            <option value="">Todos os Horários</option>
+            <option value="08:00">08:00</option>
+            <option value="09:00">09:00</option>
+            <option value="10:00">10:00</option>
+            <option value="11:00">11:00</option>
+            <option value="13:00">13:00</option>
+            <option value="14:00">14:00</option>
+            <option value="15:00">15:00</option>
+            <option value="16:00">16:00</option>
+            <option value="17:00">17:00</option>
+            <option value="18:00">18:00</option>
+            <option value="19:00">19:00</option>
+            <option value="20:00">20:00</option>
+            <option value="21:00">21:00</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">3. Nome do Aluno</label>
+          <input type="text" id="filtro-historico-nome" oninput="renderHistoricoTable()" placeholder="Buscar aluno cadastrado..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-violet-500">
+        </div>
+      </div>
+
+      <!-- Resumo Estatístico do Histórico -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+          <span class="text-xs text-slate-400">Total de Alunos Listados</span>
+          <span id="stat-hist-total" class="text-xl font-bold text-white tabular-nums">0</span>
+        </div>
+        <div class="bg-slate-900 border border-emerald-900/30 rounded-xl p-4 flex items-center justify-between">
+          <span class="text-xs text-emerald-400">Pagos no Mês</span>
+          <span id="stat-hist-pagos" class="text-xl font-bold text-emerald-400 tabular-nums">0</span>
+        </div>
+        <div class="bg-slate-900 border border-red-900/40 rounded-xl p-4 flex items-center justify-between">
+          <span class="text-xs text-[#ff0000]">Pendentes no Mês</span>
+          <span id="stat-hist-pendentes" class="text-xl font-bold text-[#ff0000] tabular-nums">0</span>
+        </div>
+      </div>
+
+      <!-- Lista Única de Todos os Alunos Cadastrados (4 Colunas) -->
+      <div class="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-300">
+            <thead class="bg-slate-950/80 text-xs uppercase tracking-wider text-slate-400 border-b border-slate-800">
+              <tr>
+                <th class="py-3.5 px-6 font-semibold w-5/12">1. Nome Completo</th>
+                <th class="py-3.5 px-6 font-semibold w-2/12">2. Turno</th>
+                <th class="py-3.5 px-6 font-semibold w-2/12">3. Horário</th>
+                <th class="py-3.5 px-6 font-semibold w-3/12">4. Data de Pagamento</th>
+              </tr>
+            </thead>
+            <tbody id="historico-table-body" class="divide-y divide-slate-800/60 font-normal">
+              <!-- Renderizado dinamicamente via JS -->
+            </tbody>
+          </table>
+        </div>
+        <div id="historico-empty" class="hidden p-10 text-center text-slate-500 text-sm">
+          Nenhum aluno encontrado para os filtros selecionados.
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================================================== -->
+  <!-- MODAL: FORMULÁRIO DE ALUNO (CADASTRO & EDIÇÃO) -->
+  <!-- ==================================================== -->
+  <div id="modal-aluno" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative my-8">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+        <div>
+          <h3 id="modal-aluno-title" class="text-lg font-bold text-white font-display">Cadastrar Aluno</h3>
+          <p class="text-xs text-slate-400">Preencha os dados pessoais e musicais do aluno.</p>
+        </div>
+        <button onclick="closeAlunoModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <form id="form-aluno" onsubmit="handleSaveAluno(event)" class="space-y-6 pt-4">
+        <input type="hidden" id="aluno-id" value="">
+
+        <!-- SEÇÃO 1: DADOS PESSOAIS (10 CAMPOS) -->
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-[#daa520] block mb-3">Informações Pessoais</span>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-medium text-slate-300 mb-1">Nome Completo *</label>
+              <input type="text" id="aluno-nome-completo" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Nome Social</label>
+              <input type="text" id="aluno-nome-social" placeholder="Opcional" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Data de Nascimento *</label>
+              <input type="date" id="aluno-data-nascimento" onchange="autoCalculateAge('aluno')" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Idade</label>
+              <input type="number" id="aluno-idade" min="1" max="120" readonly class="w-full bg-slate-900 border border-slate-700/60 rounded-lg px-3 py-2 text-sm text-slate-400 focus:outline-none">
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Tipo Sanguíneo</label>
+              <select id="aluno-tipo-sanguineo" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+                <option value="Não informado" selected>Não informado</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">E-mail</label>
+              <input type="email" id="aluno-email" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Telefone de Contato *</label>
+              <input type="text" id="aluno-telefone" required placeholder="(11) 99999-9999" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Nome do Responsável (se menor)</label>
+              <input type="text" id="aluno-responsavel" placeholder="Opcional se maior de idade" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Cidade *</label>
+              <input type="text" id="aluno-cidade" required placeholder="São Paulo" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+            </div>
+
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-medium text-slate-300 mb-1">Observações Médicas ou Pedagógicas</label>
+              <textarea id="aluno-observacoes" rows="2" placeholder="Observações de saúde, restrições, preferências musicais..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEÇÃO 2: DADOS MUSICAIS (3 CAMPOS) -->
+        <div class="pt-4 border-t border-slate-800">
+          <span class="text-xs font-semibold uppercase tracking-wider text-[#daa520] block mb-3">Informações Musicais</span>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Turno *</label>
+              <select id="aluno-turno" onchange="updateHorariosSelect('aluno')" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+                <option value="Manhã">Manhã</option>
+                <option value="Tarde">Tarde</option>
+                <option value="Noite">Noite</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Horário da Aula *</label>
+              <select id="aluno-horario" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+                <option value="08:00">08:00</option>
+                <option value="09:00" selected>09:00</option>
+                <option value="10:00">10:00</option>
+                <option value="11:00">11:00</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Instrumento *</label>
+              <select id="aluno-instrumento" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+                <option value="Piano">Piano</option>
+                <option value="Teclado">Teclado</option>
+                <option value="Violão Clássico">Violão Clássico</option>
+                <option value="Violão Popular">Violão Popular</option>
+                <option value="Guitarra Elétrica">Guitarra Elétrica</option>
+                <option value="Contrabaixo">Contrabaixo</option>
+                <option value="Bateria">Bateria</option>
+                <option value="Canto / Técnica Vocal">Canto / Técnica Vocal</option>
+                <option value="Violino">Violino</option>
+                <option value="Violoncelo">Violoncelo</option>
+                <option value="Saxofone">Saxofone</option>
+                <option value="Flauta Transversal">Flauta Transversal</option>
+                <option value="Ukulele">Ukulele</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+          <button type="button" onclick="closeAlunoModal()" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 text-sm font-medium transition">Cancelar</button>
+          <button type="submit" id="btn-submit-aluno" class="px-5 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition shadow-lg shadow-violet-600/20">Salvar Aluno</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================================================== -->
+  <!-- MODAL: FORMULÁRIO DE PROFESSOR (CADASTRO & EDIÇÃO) -->
+  <!-- ==================================================== -->
+  <div id="modal-professor" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative my-8">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+        <div>
+          <h3 id="modal-prof-title" class="text-lg font-bold text-white font-display">Cadastrar Professor</h3>
+          <p class="text-xs text-slate-400">Preencha os dados pessoais e pedagógicos do professor.</p>
+        </div>
+        <button onclick="closeProfessorModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <form id="form-professor" onsubmit="handleSaveProfessor(event)" class="space-y-6 pt-4">
+        <input type="hidden" id="prof-id" value="">
+
+        <!-- DADOS PESSOAIS (7 CAMPOS) -->
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-[#daa520] block mb-3">Informações Pessoais (7 campos)</span>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-medium text-slate-300 mb-1">Nome Completo *</label>
+              <input type="text" id="prof-nome-completo" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Nome Social</label>
+              <input type="text" id="prof-nome-social" placeholder="Opcional" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Data de Nascimento *</label>
+              <input type="date" id="prof-data-nascimento" onchange="autoCalculateAge('prof')" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Idade</label>
+              <input type="number" id="prof-idade" readonly class="w-full bg-slate-900 border border-slate-700/60 rounded-lg px-3 py-2 text-sm text-slate-400 focus:outline-none">
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Tipo Sanguíneo</label>
+              <select id="prof-tipo-sanguineo" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+                <option value="Não informado" selected>Não informado</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">E-mail *</label>
+              <input type="email" id="prof-email" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Telefone de Contato *</label>
+              <input type="text" id="prof-telefone" required placeholder="(11) 98888-8888" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
+            </div>
+          </div>
+        </div>
+
+        <!-- DADOS PROFISSIONAIS & MUSICAIS -->
+        <div class="pt-4 border-t border-slate-800">
+          <span class="text-xs font-semibold uppercase tracking-wider text-[#daa520] block mb-3">Informações Profissionais & Musicais</span>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-medium text-slate-300 mb-1">Data de Início *</label>
+              <input type="date" id="prof-data-inicio" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
+            </div>
+
+          <!-- TURNOS DINÂMICOS -->
+          <div class="space-y-2 pt-3 border-t border-slate-800">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-semibold text-slate-300">Turnos de Aula *</label>
+              <button type="button" onclick="addProfTurnoRow()" class="text-xs text-[#daa520] hover:text-[#b8860b] font-semibold flex items-center gap-1">
+                + Adicionar outro Turno
+              </button>
+            </div>
+            <div id="prof-turnos-list" class="space-y-2">
+              <!-- Linhas de turno geradas dinamicamente -->
+            </div>
+          </div>
+
+          <!-- HORÁRIOS DINÂMICOS -->
+          <div class="space-y-2 pt-3 border-t border-slate-800">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-semibold text-slate-300">Horários de Aula *</label>
+              <button type="button" onclick="addProfHorarioRow()" class="text-xs text-[#daa520] hover:text-[#b8860b] font-semibold flex items-center gap-1">
+                + Adicionar outro Horário de Aula
+              </button>
+            </div>
+            <div id="prof-horarios-list" class="space-y-2">
+              <!-- Linhas de horário geradas dinamicamente -->
+            </div>
+          </div>
+
+          <!-- INSTRUMENTOS DINÂMICOS -->
+          <div class="space-y-2 pt-3 border-t border-slate-800">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-semibold text-slate-300">Instrumentos Lecionados *</label>
+              <button type="button" onclick="addProfInstrumentoRow()" class="text-xs text-[#daa520] hover:text-[#b8860b] font-semibold flex items-center gap-1">
+                + Adicionar outro Instrumento
+              </button>
+            </div>
+            <div id="prof-instrumentos-list" class="space-y-2">
+              <!-- Linhas de instrumento geradas dinamicamente -->
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+          <button type="button" onclick="closeProfessorModal()" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 text-sm font-medium transition">Cancelar</button>
+          <button type="submit" id="btn-submit-prof" class="px-5 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition shadow-lg shadow-violet-600/20">Salvar Professor</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================================================== -->
+  <!-- MODAL: CONFIGURAÇÃO SUPABASE -->
+  <!-- ==================================================== -->
+  <div id="modal-supabase" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h3 class="text-lg font-bold text-white font-display">Conexão com o Supabase</h3>
+        <button onclick="closeSupabaseModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">✕</button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Project URL</label>
+          <input type="url" id="cfg-supabase-url" placeholder="https://seu-projeto.supabase.co" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Anon / Public Key</label>
+          <input type="text" id="cfg-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+        </div>
+        <p class="text-xs text-slate-400">
+          As credenciais são salvas no <code class="text-violet-400 font-mono">localStorage</code> do seu navegador. Se deixado em branco, o sistema funciona perfeitamente em modo de demonstração local offline.
+        </p>
+      </div>
+
+      <div id="supabase-test-feedback" class="hidden text-xs p-3 rounded-lg border"></div>
+
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t border-slate-800">
+        <button onclick="testSupabaseDirect()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded-xl border border-slate-700 transition">
+          Testar Conexão
+        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="closeSupabaseModal()" class="px-4 py-2 text-slate-400 hover:text-white text-xs font-medium">Fechar</button>
+          <button onclick="saveSupabaseSettings()" class="px-4 py-2 bg-violet-600 hover:bg-violet-500 text-white text-xs font-medium rounded-xl shadow-lg shadow-violet-600/20">Salvar Credenciais</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT PURO & SUPABASE INTEGRATION -->
+  <script>
+    // ESTADO DA APLICAÇÃO
+    let currentTab = 'alunos';
+    let currentTurnoPagamento = 'Manhã';
+    let supabaseClient = null;
+
+    const HORARIOS = {
+      'Manhã': ['08:00', '09:00', '10:00', '11:00'],
+      'Tarde': ['13:00', '14:00', '15:00', '16:00', '17:00'],
+      'Noite': ['18:00', '19:00', '20:00', '21:00']
+    };
+
+    // Dados em Memória / LocalStorage (100% Zerado para uso real)
+    try {
+      localStorage.removeItem('harmonia_alunos');
+      localStorage.removeItem('harmonia_professores');
+      localStorage.removeItem('harmonia_pagamentos');
+      localStorage.removeItem('harmonia_alunos_data');
+      localStorage.removeItem('harmonia_professores_data');
+      localStorage.removeItem('harmonia_pagamentos_data');
+    } catch(e) {}
+
+    let alunos = JSON.parse(localStorage.getItem('escola_ks_alunos') || '[]');
+    let professores = JSON.parse(localStorage.getItem('escola_ks_professores') || '[]');
+    let pagamentos = JSON.parse(localStorage.getItem('escola_ks_pagamentos') || '[]');
+
+    // Filtra para remover qualquer eventual resquício de registros de teste
+    alunos = alunos.filter(a => a.id !== '1' && a.id !== '2' && a.id !== '3' && !a.nome_completo?.includes('Lucas Gabriel'));
+    professores = professores.filter(p => p.id !== '1' && !p.nome_completo?.includes('Alexandre Carvalho'));
+    pagamentos = pagamentos.filter(pg => pg.aluno_id !== '1' && pg.aluno_id !== '2');
+
+    localStorage.setItem('escola_ks_alunos', JSON.stringify(alunos));
+    localStorage.setItem('escola_ks_professores', JSON.stringify(professores));
+    localStorage.setItem('escola_ks_pagamentos', JSON.stringify(pagamentos));
+
+    // Inicialização do Supabase Client
+    function initSupabase() {
+      const url = localStorage.getItem('harmonia_sb_url');
+      const key = localStorage.getItem('harmonia_sb_key');
+      const indicator = document.getElementById('supabase-status-indicator');
+      if (url && key && window.supabase) {
+        try {
+          supabaseClient = window.supabase.createClient(url, key);
+          indicator.className = 'w-2 h-2 rounded-full bg-emerald-500';
+          syncFromSupabase();
+        } catch(e) {
+          indicator.className = 'w-2 h-2 rounded-full bg-amber-500';
+        }
+      } else {
+        indicator.className = 'w-2 h-2 rounded-full bg-slate-500';
+      }
+    }
+
+    async function syncFromSupabase() {
+      if (!supabaseClient) return;
+      try {
+        const { data: al, error: errAl } = await supabaseClient.from('alunos').select('*');
+        if (!errAl && al && al.length > 0) {
+          alunos = al;
+          localStorage.setItem('escola_ks_alunos', JSON.stringify(alunos));
+          renderAlunosTable();
+        }
+        const { data: pr, error: errPr } = await supabaseClient.from('professores').select('*');
+        if (!errPr && pr && pr.length > 0) {
+          professores = pr;
+          localStorage.setItem('escola_ks_professores', JSON.stringify(professores));
+          renderProfessoresTable();
+        }
+        const { data: pg, error: errPg } = await supabaseClient.from('pagamentos').select('*');
+        if (!errPg && pg) {
+          pagamentos = pg;
+          localStorage.setItem('escola_ks_pagamentos', JSON.stringify(pagamentos));
+          renderPagamentosTable();
+        }
+      } catch(e) {
+        console.warn('Sync Supabase fallback:', e);
+      }
+    }
+
+    // NAVEGAÇÃO DE ABAS
+    function switchTab(tab) {
+      currentTab = tab;
+      ['alunos', 'professores', 'aniversariantes', 'pagamentos', 'historico'].forEach(t => {
+        const view = document.getElementById(`view-${t}`);
+        const btn = document.getElementById(`tab-btn-${t}`);
+        const mobBtn = document.getElementById(`mob-tab-${t}`);
+        if (t === tab) {
+          if (view) view.classList.remove('hidden');
+          if (btn) btn.className = 'tab-btn px-3 py-1.5 rounded-lg text-xs font-bold text-black bg-[#daa520] shadow-md shadow-[#daa520]/20 transition-colors';
+          if (mobBtn) mobBtn.className = 'px-3 py-1.5 rounded-lg whitespace-nowrap bg-[#daa520] text-black font-bold shadow-sm';
+        } else {
+          if (view) view.classList.add('hidden');
+          if (btn) btn.className = 'tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors';
+          if (mobBtn) mobBtn.className = 'px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300 font-medium';
+        }
+      });
+
+      if (tab === 'alunos') renderAlunosTable();
+      if (tab === 'professores') renderProfessoresTable();
+      if (tab === 'aniversariantes') renderAniversariantes();
+      if (tab === 'pagamentos') {
+        populateHorariosPagamento();
+        renderPagamentosTable();
+      }
+      if (tab === 'historico') {
+        renderHistoricoTable();
+      }
+    }
+
+    // CÁLCULO AUTOMÁTICO DE IDADE
+    function calculateAge(dateStr) {
+      if (!dateStr) return 0;
+      const bDate = new Date(dateStr);
+      const today = new Date();
+      let age = today.getFullYear() - bDate.getFullYear();
+      const m = today.getMonth() - bDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < bDate.getDate())) age--;
+      return Math.max(0, age);
+    }
+
+    function autoCalculateAge(type) {
+      if (type === 'aluno') {
+        const val = document.getElementById('aluno-data-nascimento').value;
+        document.getElementById('aluno-idade').value = calculateAge(val);
+      } else {
+        const val = document.getElementById('prof-data-nascimento').value;
+        document.getElementById('prof-idade').value = calculateAge(val);
+      }
+    }
+
+    function updateHorariosSelect(type) {
+      const turno = document.getElementById(type === 'aluno' ? 'aluno-turno' : 'prof-turno').value;
+      const select = document.getElementById(type === 'aluno' ? 'aluno-horario' : 'prof-horario');
+      const list = HORARIOS[turno] || [];
+      select.innerHTML = list.map(h => `<option value="${h}">${h}</option>`).join('');
+    }
+
+    // ================= GERENCIAMENTO DE ALUNOS =================
+    function openAlunoForm(editId = null) {
+      const modal = document.getElementById('modal-aluno');
+      const title = document.getElementById('modal-aluno-title');
+      const form = document.getElementById('form-aluno');
+      
+      if (editId) {
+        const a = alunos.find(x => String(x.id) === String(editId));
+        if (!a) return;
+        title.textContent = 'Editar Cadastro do Aluno';
+        document.getElementById('aluno-id').value = a.id;
+        document.getElementById('aluno-nome-completo').value = a.nome_completo;
+        document.getElementById('aluno-nome-social').value = a.nome_social || '';
+        document.getElementById('aluno-data-nascimento').value = a.data_nascimento;
+        document.getElementById('aluno-idade').value = a.idade;
+        document.getElementById('aluno-tipo-sanguineo').value = a.tipo_sanguineo || 'Não informado';
+        document.getElementById('aluno-email').value = a.email || '';
+        document.getElementById('aluno-responsavel').value = a.nome_responsavel || '';
+        document.getElementById('aluno-telefone').value = a.telefone_contato;
+        document.getElementById('aluno-cidade').value = a.cidade;
+        document.getElementById('aluno-observacoes').value = a.observacoes || '';
+        document.getElementById('aluno-turno').value = a.turno;
+        updateHorariosSelect('aluno');
+        document.getElementById('aluno-horario').value = a.horario;
+        document.getElementById('aluno-instrumento').value = a.instrumento;
+      } else {
+        title.textContent = 'Cadastrar Novo Aluno';
+        form.reset();
+        document.getElementById('aluno-id').value = '';
+        updateHorariosSelect('aluno');
+      }
+      modal.classList.remove('hidden');
+    }
+
+    function closeAlunoModal() {
+      document.getElementById('modal-aluno').classList.add('hidden');
+    }
+
+    async function handleSaveAluno(e) {
+      e.preventDefault();
+      const id = document.getElementById('aluno-id').value;
+      const data = {
+        nome_completo: document.getElementById('aluno-nome-completo').value.trim(),
+        nome_social: document.getElementById('aluno-nome-social').value.trim(),
+        data_nascimento: document.getElementById('aluno-data-nascimento').value,
+        idade: parseInt(document.getElementById('aluno-idade').value || '0', 10),
+        tipo_sanguineo: document.getElementById('aluno-tipo-sanguineo').value,
+        email: document.getElementById('aluno-email').value.trim(),
+        nome_responsavel: document.getElementById('aluno-responsavel').value.trim(),
+        telefone_contato: document.getElementById('aluno-telefone').value.trim(),
+        cidade: document.getElementById('aluno-cidade').value.trim(),
+        observacoes: document.getElementById('aluno-observacoes').value.trim(),
+        turno: document.getElementById('aluno-turno').value,
+        horario: document.getElementById('aluno-horario').value,
+        instrumento: document.getElementById('aluno-instrumento').value
+      };
+
+      if (id) {
+        // EDIÇÃO
+        const idx = alunos.findIndex(x => String(x.id) === String(id));
+        if (idx >= 0) {
+          alunos[idx] = { ...alunos[idx], ...data };
+        }
+        if (supabaseClient) {
+          try {
+            await supabaseClient.from('alunos').update(data).eq('id', id);
+          } catch(err) { console.error(err); }
+        }
+      } else {
+        // NOVO CADASTRO
+        const newId = String(Date.now());
+        const newAluno = { id: newId, ...data };
+        alunos.unshift(newAluno);
+        if (supabaseClient) {
+          try {
+            await supabaseClient.from('alunos').insert([newAluno]);
+          } catch(err) { console.error(err); }
+        }
+      }
+
+      localStorage.setItem('escola_ks_alunos', JSON.stringify(alunos));
+      closeAlunoModal();
+      renderAlunosTable();
+      renderAniversariantes();
+      renderPagamentosTable();
+    }
+
+    async function deleteAluno(id) {
+      if (!confirm('Tem certeza que deseja excluir o cadastro deste aluno?')) return;
+      alunos = alunos.filter(x => String(x.id) !== String(id));
+      localStorage.setItem('escola_ks_alunos', JSON.stringify(alunos));
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('alunos').delete().eq('id', id);
+        } catch(e) { console.error(e); }
+      }
+      renderAlunosTable();
+      renderAniversariantes();
+      renderPagamentosTable();
+    }
+
+    function renderAlunosTable() {
+      const tbody = document.getElementById('alunos-table-body');
+      const empty = document.getElementById('alunos-empty');
+      const busca = (document.getElementById('filtro-aluno-busca').value || '').toLowerCase();
+      const fTurno = document.getElementById('filtro-aluno-turno').value;
+      const fInst = document.getElementById('filtro-aluno-instrumento').value;
+
+      const filtered = alunos.filter(a => {
+        const matchesBusca = !busca || a.nome_completo.toLowerCase().includes(busca) || (a.email && a.email.toLowerCase().includes(busca));
+        const matchesTurno = !fTurno || a.turno === fTurno;
+        const matchesInst = !fInst || a.instrumento === fInst;
+        return matchesBusca && matchesTurno && matchesInst;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      tbody.innerHTML = filtered.map(a => `
+        <tr class="hover:bg-slate-800/40 transition">
+          <td class="py-3.5 px-4">
+            <div class="font-semibold text-white">${a.nome_completo}</div>
+            ${a.nome_social ? `<div class="text-xs text-slate-400">Nome Social: ${a.nome_social}</div>` : ''}
+          </td>
+          <td class="py-3.5 px-4 whitespace-nowrap">
+            <span class="font-medium text-slate-200 tabular-nums">${a.idade} anos</span>
+            <div class="text-xs text-slate-500 tabular-nums">${a.data_nascimento}</div>
+          </td>
+          <td class="py-3.5 px-4 whitespace-nowrap">
+            <span class="text-[#daa520] font-medium">${a.instrumento}</span>
+          </td>
+          <td class="py-3.5 px-4 whitespace-nowrap">
+            <span class="text-xs text-slate-300">${a.turno} · <span class="font-mono">${a.horario}</span></span>
+          </td>
+          <td class="py-3.5 px-4 text-xs">
+            <div>${a.telefone_contato}</div>
+            <div class="text-slate-400">${a.cidade}</div>
+          </td>
+          <td class="py-3.5 px-4 text-right whitespace-nowrap">
+            <button onclick="openAlunoForm('${a.id}')" class="px-2.5 py-1 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 mr-1.5 transition">
+              Editar
+            </button>
+            <button onclick="deleteAluno('${a.id}')" class="px-2.5 py-1 text-xs rounded-lg bg-red-950/40 hover:bg-red-900/60 text-red-300 transition">
+              Excluir
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // ================= GERENCIAMENTO DE PROFESSORES =================
+    const ALL_INSTRUMENTOS_LIST = [
+      'Piano', 'Teclado', 'Violão Clássico', 'Violão Popular',
+      'Guitarra Elétrica', 'Contrabaixo', 'Bateria',
+      'Canto / Técnica Vocal', 'Violino', 'Violoncelo',
+      'Saxofone', 'Flauta Transversal', 'Ukulele'
+    ];
+
+    let profTurnos = ['Manhã'];
+    let profHorarios = ['09:00'];
+    let profInstrumentos = ['Piano'];
+
+    function renderProfTurnosList() {
+      const container = document.getElementById('prof-turnos-list');
+      if (!container) return;
+      container.innerHTML = profTurnos.map((t, idx) => `
+        <div class="flex items-center gap-2">
+          <select onchange="profTurnos[${idx}] = this.value" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+            <option value="Manhã" ${t === 'Manhã' ? 'selected' : ''}>🌅 Manhã</option>
+            <option value="Tarde" ${t === 'Tarde' ? 'selected' : ''}>☀️ Tarde</option>
+            <option value="Noite" ${t === 'Noite' ? 'selected' : ''}>🌙 Noite</option>
+          </select>
+          ${profTurnos.length > 1 ? `
+            <button type="button" onclick="removeProfTurnoRow(${idx})" class="p-2 text-slate-500 hover:text-red-400 rounded-lg hover:bg-slate-800 transition" title="Remover este turno">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </button>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    function addProfTurnoRow() {
+      profTurnos.push('Tarde');
+      renderProfTurnosList();
+    }
+
+    function removeProfTurnoRow(idx) {
+      if (profTurnos.length > 1) {
+        profTurnos.splice(idx, 1);
+        renderProfTurnosList();
+      }
+    }
+
+    function renderProfHorariosList() {
+      const container = document.getElementById('prof-horarios-list');
+      if (!container) return;
+      const allTimes = ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'];
+      container.innerHTML = profHorarios.map((h, idx) => `
+        <div class="flex items-center gap-2">
+          <select onchange="profHorarios[${idx}] = this.value" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+            ${allTimes.map(time => `<option value="${time}" ${time === h ? 'selected' : ''}>${time}</option>`).join('')}
+          </select>
+          ${profHorarios.length > 1 ? `
+            <button type="button" onclick="removeProfHorarioRow(${idx})" class="p-2 text-slate-500 hover:text-red-400 rounded-lg hover:bg-slate-800 transition" title="Remover este horário">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </button>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    function addProfHorarioRow() {
+      profHorarios.push('10:00');
+      renderProfHorariosList();
+    }
+
+    function removeProfHorarioRow(idx) {
+      if (profHorarios.length > 1) {
+        profHorarios.splice(idx, 1);
+        renderProfHorariosList();
+      }
+    }
+
+    function renderProfInstrumentosList() {
+      const container = document.getElementById('prof-instrumentos-list');
+      if (!container) return;
+      container.innerHTML = profInstrumentos.map((inst, idx) => `
+        <div class="flex items-center gap-2">
+          <select onchange="profInstrumentos[${idx}] = this.value" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+            ${ALL_INSTRUMENTOS_LIST.map(item => `<option value="${item}" ${item === inst ? 'selected' : ''}>${item}</option>`).join('')}
+          </select>
+          ${profInstrumentos.length > 1 ? `
+            <button type="button" onclick="removeProfInstrumentoRow(${idx})" class="p-2 text-slate-500 hover:text-red-400 rounded-lg hover:bg-slate-800 transition" title="Remover este instrumento">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </button>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    function addProfInstrumentoRow() {
+      profInstrumentos.push('Violão Popular');
+      renderProfInstrumentosList();
+    }
+
+    function removeProfInstrumentoRow(idx) {
+      if (profInstrumentos.length > 1) {
+        profInstrumentos.splice(idx, 1);
+        renderProfInstrumentosList();
+      }
+    }
+
+    function openProfessorForm(editId = null) {
+      const modal = document.getElementById('modal-professor');
+      const title = document.getElementById('modal-prof-title');
+      const form = document.getElementById('form-professor');
+      
+      if (editId) {
+        const p = professores.find(x => String(x.id) === String(editId));
+        if (!p) return;
+        title.textContent = 'Editar Cadastro do Professor';
+        document.getElementById('prof-id').value = p.id;
+        document.getElementById('prof-nome-completo').value = p.nome_completo;
+        document.getElementById('prof-nome-social').value = p.nome_social || '';
+        document.getElementById('prof-data-nascimento').value = p.data_nascimento;
+        document.getElementById('prof-idade').value = p.idade;
+        document.getElementById('prof-tipo-sanguineo').value = p.tipo_sanguineo || 'Não informado';
+        document.getElementById('prof-email').value = p.email;
+        document.getElementById('prof-telefone').value = p.telefone_contato;
+        document.getElementById('prof-data-inicio').value = p.data_inicio;
+
+        profTurnos = p.turnos_aula && p.turnos_aula.length > 0
+          ? [...p.turnos_aula]
+          : (p.turno_aula ? p.turno_aula.split(',').map(s => s.trim()) : ['Manhã']);
+
+        profHorarios = p.horarios_aula && p.horarios_aula.length > 0
+          ? [...p.horarios_aula]
+          : (p.horario_aula ? p.horario_aula.split(',').map(s => s.trim()) : ['09:00']);
+
+        profInstrumentos = p.instrumentos && p.instrumentos.length > 0
+          ? [...p.instrumentos]
+          : (p.instrumento ? p.instrumento.split(',').map(s => s.trim()) : ['Piano']);
+      } else {
+        title.textContent = 'Cadastrar Novo Professor';
+        form.reset();
+        document.getElementById('prof-id').value = '';
+        profTurnos = ['Manhã'];
+        profHorarios = ['09:00'];
+        profInstrumentos = ['Piano'];
+      }
+
+      renderProfTurnosList();
+      renderProfHorariosList();
+      renderProfInstrumentosList();
+      modal.classList.remove('hidden');
+    }
+
+    function closeProfessorModal() {
+      document.getElementById('modal-professor').classList.add('hidden');
+    }
+
+    async function handleSaveProfessor(e) {
+      e.preventDefault();
+      const id = document.getElementById('prof-id').value;
+
+      const cleanTurnos = profTurnos.filter(Boolean);
+      const cleanHorarios = profHorarios.filter(Boolean);
+      const cleanInst = profInstrumentos.filter(Boolean);
+
+      const data = {
+        nome_completo: document.getElementById('prof-nome-completo').value.trim(),
+        nome_social: document.getElementById('prof-nome-social').value.trim(),
+        data_nascimento: document.getElementById('prof-data-nascimento').value,
+        idade: parseInt(document.getElementById('prof-idade').value || '0', 10),
+        tipo_sanguineo: document.getElementById('prof-tipo-sanguineo').value,
+        email: document.getElementById('prof-email').value.trim(),
+        telefone_contato: document.getElementById('prof-telefone').value.trim(),
+        data_inicio: document.getElementById('prof-data-inicio').value,
+        turno_aula: cleanTurnos.join(', '),
+        horario_aula: cleanHorarios.join(', '),
+        instrumento: cleanInst.join(', '),
+        turnos_aula: cleanTurnos,
+        horarios_aula: cleanHorarios,
+        instrumentos: cleanInst,
+        valor_mensalidade: 0
+      };
+
+      if (id) {
+        const idx = professores.findIndex(x => String(x.id) === String(id));
+        if (idx >= 0) professores[idx] = { ...professores[idx], ...data };
+        if (supabaseClient) {
+          try {
+            await supabaseClient.from('professores').update(data).eq('id', id);
+          } catch(err) { console.error(err); }
+        }
+      } else {
+        const newProf = { id: String(Date.now()), ...data };
+        professores.unshift(newProf);
+        if (supabaseClient) {
+          try {
+            await supabaseClient.from('professores').insert([newProf]);
+          } catch(err) { console.error(err); }
+        }
+      }
+
+      localStorage.setItem('escola_ks_professores', JSON.stringify(professores));
+      closeProfessorModal();
+      renderProfessoresTable();
+    }
+
+    async function deleteProfessor(id) {
+      if (!confirm('Tem certeza que deseja excluir o professor selecionado?')) return;
+      professores = professores.filter(x => String(x.id) !== String(id));
+      localStorage.setItem('escola_ks_professores', JSON.stringify(professores));
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('professores').delete().eq('id', id);
+        } catch(e) { console.error(e); }
+      }
+      renderProfessoresTable();
+    }
+
+    function renderProfessoresTable() {
+      const tbody = document.getElementById('professores-table-body');
+      const empty = document.getElementById('professores-empty');
+      if (professores.length === 0) {
+        tbody.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      tbody.innerHTML = professores.map(p => {
+        const instList = p.instrumentos || (p.instrumento ? p.instrumento.split(',').map(s=>s.trim()) : []);
+        return `
+          <tr class="hover:bg-slate-800/40 transition">
+            <td class="py-3.5 px-4">
+              <div class="font-semibold text-white">${p.nome_completo}</div>
+              ${p.nome_social ? `<div class="text-xs text-slate-400">Nome Social: ${p.nome_social}</div>` : ''}
+              <div class="text-xs text-slate-500 mt-0.5">${p.email} · ${p.telefone_contato}</div>
+            </td>
+            <td class="py-3.5 px-4">
+              <div class="flex flex-wrap gap-1 max-w-xs">
+                ${instList.map(inst => `
+                  <span class="inline-block px-2 py-0.5 rounded text-xs font-medium bg-[#daa520]/15 text-[#daa520] border border-[#daa520]/30">
+                    ${inst}
+                  </span>
+                `).join('')}
+              </div>
+            </td>
+            <td class="py-3.5 px-4 whitespace-nowrap">
+              <div class="text-xs text-slate-300 font-medium">${p.turno_aula}</div>
+              <div class="text-xs text-slate-400 font-mono mt-0.5">${p.horario_aula}</div>
+            </td>
+            <td class="py-3.5 px-4 whitespace-nowrap text-xs text-slate-400 tabular-nums">
+              ${p.data_inicio}
+            </td>
+            <td class="py-3.5 px-4 text-right whitespace-nowrap">
+              <button onclick="openProfessorForm('${p.id}')" class="px-2.5 py-1 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 mr-1.5 transition">
+                Editar
+              </button>
+              <button onclick="deleteProfessor('${p.id}')" class="px-2.5 py-1 text-xs rounded-lg bg-red-950/40 hover:bg-red-900/60 text-red-300 transition">
+                Excluir
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // ================= TELA 1: ANIVERSARIANTES DO MÊS =================
+    function renderAniversariantes() {
+      const selMes = parseInt(document.getElementById('select-mes-aniversario').value, 10);
+      const grid = document.getElementById('aniversariantes-grid');
+      const empty = document.getElementById('aniversariantes-empty');
+
+      const aniversariantes = alunos.filter(a => {
+        if (!a.data_nascimento) return false;
+        const parts = a.data_nascimento.split('-');
+        if (parts.length < 2) return false;
+        const mesNasc = parseInt(parts[1], 10);
+        return mesNasc === selMes;
+      }).sort((a, b) => {
+        const diaA = parseInt(a.data_nascimento.split('-')[2], 10);
+        const diaB = parseInt(b.data_nascimento.split('-')[2], 10);
+        return diaA - diaB;
+      });
+
+      if (aniversariantes.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      grid.innerHTML = aniversariantes.map(a => {
+        const dia = a.data_nascimento.split('-')[2];
+        const anoNasc = parseInt(a.data_nascimento.split('-')[0], 10);
+        const idadeCompleta = 2026 - anoNasc;
+
+        return `
+          <div class="bg-slate-900 rounded-2xl border border-slate-800 p-5 flex flex-col justify-between hover:border-[#daa520]/40 transition shadow-lg">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-[#daa520]/20 border border-[#daa520]/30 flex flex-col items-center justify-center text-[#daa520] font-display">
+                  <span class="text-xs uppercase font-medium">DIA</span>
+                  <span class="text-lg font-bold tabular-nums leading-none">${dia}</span>
+                </div>
+                <div>
+                  <span class="text-xs text-slate-400">Completando</span>
+                  <div class="text-base font-bold text-white tabular-nums">${idadeCompleta} Anos</div>
+                </div>
+              </div>
+              <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 font-medium">${a.turno}</span>
+            </div>
+
+            <div class="my-4">
+              <!-- NOME EM DESTAQUE GRANDE -->
+              <h3 class="text-xl font-bold text-white tracking-tight leading-snug">${a.nome_completo}</h3>
+              ${a.nome_social ? `<p class="text-xs text-slate-400 mt-0.5">(${a.nome_social})</p>` : ''}
+            </div>
+
+            <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+              <span class="text-[#daa520] font-semibold">${a.instrumento}</span>
+              <span class="font-mono text-slate-300 font-medium">⏰ ${a.horario}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ================= TELA 2: CONFIRMAÇÃO DE PAGAMENTO =================
+    function setTurnoPagamento(turno) {
+      currentTurnoPagamento = turno;
+      ['manha', 'tarde', 'noite'].forEach(t => {
+        const btn = document.getElementById(`btn-turno-${t}`);
+        const cap = t === 'manha' ? 'Manhã' : t === 'tarde' ? 'Tarde' : 'Noite';
+        if (cap === turno) {
+          btn.className = 'turno-btn py-3 px-4 rounded-xl border border-[#daa520] bg-[#daa520] text-black font-bold text-sm shadow-md shadow-[#daa520]/20 transition-all flex items-center justify-center gap-2';
+        } else {
+          btn.className = 'turno-btn py-3 px-4 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 hover:text-slate-200 font-medium text-sm transition-all flex items-center justify-center gap-2';
+        }
+      });
+      populateHorariosPagamento();
+      renderPagamentosTable();
+    }
+
+    function populateHorariosPagamento() {
+      const select = document.getElementById('select-horario-pagamento');
+      const list = HORARIOS[currentTurnoPagamento] || [];
+      select.innerHTML = list.map(h => `<option value="${h}">${h}</option>`).join('');
+    }
+
+    async function togglePago(alunoId, mes, checkbox) {
+      const isChecked = checkbox.checked;
+      const idx = pagamentos.findIndex(p => String(p.aluno_id) === String(alunoId) && p.mes === mes);
+      if (idx >= 0) {
+        pagamentos[idx].pago = isChecked;
+      } else {
+        pagamentos.push({ aluno_id: alunoId, mes: mes, pago: isChecked });
+      }
+      localStorage.setItem('escola_ks_pagamentos', JSON.stringify(pagamentos));
+
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('pagamentos').upsert({
+            aluno_id: alunoId,
+            mes: mes,
+            pago: isChecked,
+            data_pagamento: isChecked ? new Date().toISOString() : null
+          }, { onConflict: 'aluno_id,mes' });
+        } catch(e) { console.error('Erro ao atualizar no Supabase:', e); }
+      }
+
+      renderPagamentosTable();
+    }
+
+    function renderPagamentosTable() {
+      const horario = document.getElementById('select-horario-pagamento').value;
+      const defaultMes = document.getElementById('select-mes-pagamento')?.value || 'Novembro/2026';
+      const busca = (document.getElementById('filtro-pagamento-busca')?.value || '').toLowerCase();
+      const tbody = document.getElementById('pagamentos-table-body');
+      const empty = document.getElementById('pagamentos-empty');
+
+      // Filtrar alunos do turno, horário selecionado e busca por nome, ordenados ALFABETICAMENTE
+      const alunosDoHorario = alunos
+        .filter(a => {
+          const matchTurno = a.turno === currentTurnoPagamento;
+          const matchHorario = a.horario === horario;
+          const matchBusca = !busca || 
+            a.nome_completo.toLowerCase().includes(busca) || 
+            (a.nome_social && a.nome_social.toLowerCase().includes(busca));
+          return matchTurno && matchHorario && matchBusca;
+        })
+        .sort((a, b) => a.nome_completo.localeCompare(b.nome_completo));
+
+      document.getElementById('stat-total-alunos').textContent = alunosDoHorario.length;
+      let pagosCount = 0;
+
+      if (alunosDoHorario.length === 0) {
+        tbody.innerHTML = '';
+        empty.classList.remove('hidden');
+        document.getElementById('stat-pagos').textContent = '0';
+        document.getElementById('stat-pendentes').textContent = '0';
+        return;
+      }
+      empty.classList.add('hidden');
+
+      tbody.innerHTML = alunosDoHorario.map(a => {
+        const pag = pagamentos.find(p => String(p.aluno_id) === String(a.id) && p.mes === defaultMes);
+        const estaPago = pag ? Boolean(pag.pago) : false;
+        if (estaPago) pagosCount++;
+
+        return `
+          <tr class="hover:bg-slate-800/40 transition">
+            <!-- COLUNA 1: NOME COMPLETO DO ALUNO -->
+            <td class="py-4 px-6">
+              <div class="font-bold text-white text-base">${a.nome_completo}</div>
+              <div class="text-xs text-[#daa520] font-medium">${a.instrumento}</div>
+            </td>
+
+            <!-- COLUNA 2: MÊS DE REFERÊNCIA (DATA ATUAL EXATA DD/MM/AAAA - READONLY) -->
+            <td class="py-4 px-6">
+              <div class="relative w-full max-w-xs">
+                <input type="text" value="${getExactFormattedDateForMonth(defaultMes)}" readonly class="bg-slate-900 border border-slate-800 text-slate-300 font-mono text-sm rounded-lg px-3 py-1.5 w-full cursor-not-allowed select-none pl-8" title="Data exata de referência definida automaticamente pelo seletor de mês (alteração manual não permitida)">
+                <svg class="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              </div>
+              <span class="text-[10px] text-slate-500 block mt-0.5">Automático: Dia atual + mês selecionado</span>
+            </td>
+
+            <!-- COLUNA 3: CHECKBOX / BOTÃO DE MARCAÇÃO "PAGO" -->
+            <td class="py-4 px-6 text-center">
+              <label class="inline-flex items-center gap-2.5 cursor-pointer select-none">
+                <input type="checkbox" onchange="togglePago('${a.id}', '${defaultMes}', this)" ${estaPago ? 'checked' : ''} class="w-5 h-5 rounded text-emerald-600 bg-slate-950 border-slate-700 focus:ring-emerald-500">
+                <span class="text-sm font-semibold ${estaPago ? 'text-emerald-400' : 'text-slate-400'}">
+                  ${estaPago ? '✓ PAGO' : 'PENDENTE'}
+                </span>
+              </label>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('stat-pagos').textContent = pagosCount;
+      document.getElementById('stat-pendentes').textContent = alunosDoHorario.length - pagosCount;
+    }
+
+    // Retorna a data exata DD/MM/AAAA para o mês selecionado
+    function getExactFormattedDateForMonth(mesString) {
+      const MESES_MAP = {
+        'Janeiro': '01', 'Fevereiro': '02', 'Março': '03', 'Abril': '04',
+        'Maio': '05', 'Junho': '06', 'Julho': '07', 'Agosto': '08',
+        'Setembro': '09', 'Outubro': '10', 'Novembro': '11', 'Dezembro': '12'
+      };
+      const now = new Date();
+      const dia = String(now.getDate()).padStart(2, '0');
+      const [nomeMes, ano] = (mesString || '').split('/');
+      const mesNum = MESES_MAP[nomeMes] || String(now.getMonth() + 1).padStart(2, '0');
+      const anoFinal = ano || String(now.getFullYear());
+      return `${dia}/${mesNum}/${anoFinal}`;
+    }
+
+    // ================= TELA: HISTÓRICO DE PAGAMENTOS =================
+    function updateHorariosFiltroHistorico() {
+      const turno = document.getElementById('filtro-historico-turno').value;
+      const select = document.getElementById('filtro-historico-horario');
+      if (!turno) {
+        select.innerHTML = `
+          <option value="">Todos os Horários</option>
+          <option value="08:00">08:00</option>
+          <option value="09:00">09:00</option>
+          <option value="10:00">10:00</option>
+          <option value="11:00">11:00</option>
+          <option value="13:00">13:00</option>
+          <option value="14:00">14:00</option>
+          <option value="15:00">15:00</option>
+          <option value="16:00">16:00</option>
+          <option value="17:00">17:00</option>
+          <option value="18:00">18:00</option>
+          <option value="19:00">19:00</option>
+          <option value="20:00">20:00</option>
+          <option value="21:00">21:00</option>
+        `;
+      } else {
+        const list = HORARIOS[turno] || [];
+        select.innerHTML = `<option value="">Todos de ${turno}</option>` + list.map(h => `<option value="${h}">${h}</option>`).join('');
+      }
+    }
+
+    function renderHistoricoTable() {
+      const mesReferencia = document.getElementById('select-mes-historico')?.value || 'Novembro/2026';
+      const filtroTurno = document.getElementById('filtro-historico-turno')?.value || '';
+      const filtroHorario = document.getElementById('filtro-historico-horario')?.value || '';
+      const filtroNome = (document.getElementById('filtro-historico-nome')?.value || '').toLowerCase().trim();
+
+      const tbody = document.getElementById('historico-table-body');
+      const empty = document.getElementById('historico-empty');
+      if (!tbody) return;
+
+      // Filtragem da lista única de alunos cadastrados
+      const filtrados = alunos.filter(a => {
+        const matchTurno = !filtroTurno || a.turno === filtroTurno;
+        const matchHorario = !filtroHorario || a.horario === filtroHorario;
+        const matchNome = !filtroNome || 
+          a.nome_completo.toLowerCase().includes(filtroNome) || 
+          (a.nome_social && a.nome_social.toLowerCase().includes(filtroNome));
+        return matchTurno && matchHorario && matchNome;
+      }).sort((a, b) => a.nome_completo.localeCompare(b.nome_completo));
+
+      // Contadores
+      let pagosCount = 0;
+      filtrados.forEach(a => {
+        const pag = pagamentos.find(p => String(p.aluno_id) === String(a.id) && p.mes === mesReferencia);
+        if (pag && pag.pago) pagosCount++;
+      });
+
+      const statTotal = document.getElementById('stat-hist-total');
+      const statPagos = document.getElementById('stat-hist-pagos');
+      const statPend = document.getElementById('stat-hist-pendentes');
+      if (statTotal) statTotal.textContent = filtrados.length;
+      if (statPagos) statPagos.textContent = pagosCount;
+      if (statPend) statPend.textContent = filtrados.length - pagosCount;
+
+      if (filtrados.length === 0) {
+        tbody.innerHTML = '';
+        if (empty) empty.classList.remove('hidden');
+        return;
+      }
+      if (empty) empty.classList.add('hidden');
+
+      tbody.innerHTML = filtrados.map(a => {
+        const pag = pagamentos.find(p => String(p.aluno_id) === String(a.id) && p.mes === mesReferencia);
+        const estaPago = pag ? Boolean(pag.pago) : false;
+
+        let dataPagamentoDisplay = '';
+        if (estaPago) {
+          if (pag.data_pagamento) {
+            const d = new Date(pag.data_pagamento);
+            dataPagamentoDisplay = `Pago em ${d.toLocaleDateString('pt-BR')} às ${d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+          } else {
+            dataPagamentoDisplay = `Confirmado em ${mesReferencia}`;
+          }
+        }
+
+        return `
+          <tr class="hover:bg-slate-800/40 transition">
+            <!-- COLUNA 1: NOME COMPLETO -->
+            <td class="py-4 px-6">
+              <div class="font-bold text-white text-base">${a.nome_completo}</div>
+              <div class="flex items-center gap-2 mt-0.5">
+                <span class="text-xs text-[#daa520] font-medium">${a.instrumento}</span>
+                ${a.nome_social ? `<span class="text-xs text-slate-500">(${a.nome_social})</span>` : ''}
+              </div>
+            </td>
+
+            <!-- COLUNA 2: TURNO -->
+            <td class="py-4 px-6 whitespace-nowrap">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium ${
+                a.turno === 'Manhã' ? 'bg-amber-950/40 text-amber-300 border border-amber-800/40' :
+                a.turno === 'Tarde' ? 'bg-orange-950/40 text-orange-300 border border-orange-800/40' :
+                'bg-indigo-950/40 text-indigo-300 border border-indigo-800/40'
+              }">
+                ${a.turno === 'Manhã' ? '🌅 Manhã' : a.turno === 'Tarde' ? '☀️ Tarde' : '🌙 Noite'}
+              </span>
+            </td>
+
+            <!-- COLUNA 3: HORÁRIO -->
+            <td class="py-4 px-6 whitespace-nowrap">
+              <span class="font-mono text-xs font-semibold text-slate-300 bg-slate-950 px-2.5 py-1 rounded border border-slate-800">
+                ⏰ ${a.horario}
+              </span>
+            </td>
+
+            <!-- COLUNA 4: DATA DE PAGAMENTO -->
+            <td class="py-4 px-6 whitespace-nowrap">
+              ${estaPago ? `
+                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-950/70 border border-emerald-800/60 text-emerald-300">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span>${dataPagamentoDisplay}</span>
+                </div>
+              ` : `
+                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-amber-950/40 border border-amber-800/40 text-amber-300">
+                  <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                  <span>Pendente de Pagamento</span>
+                </div>
+              `}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // ================= SUPABASE MODAL =================
+    function openSupabaseModal() {
+      document.getElementById('cfg-supabase-url').value = localStorage.getItem('harmonia_sb_url') || '';
+      document.getElementById('cfg-supabase-key').value = localStorage.getItem('harmonia_sb_key') || '';
+      document.getElementById('modal-supabase').classList.remove('hidden');
+    }
+
+    function closeSupabaseModal() {
+      document.getElementById('modal-supabase').classList.add('hidden');
+    }
+
+    function saveSupabaseSettings() {
+      const url = document.getElementById('cfg-supabase-url').value.trim();
+      const key = document.getElementById('cfg-supabase-key').value.trim();
+      localStorage.setItem('harmonia_sb_url', url);
+      localStorage.setItem('harmonia_sb_key', key);
+      initSupabase();
+      closeSupabaseModal();
+    }
+
+    async function testSupabaseDirect() {
+      const url = document.getElementById('cfg-supabase-url').value.trim();
+      const key = document.getElementById('cfg-supabase-key').value.trim();
+      const fb = document.getElementById('supabase-test-feedback');
+      fb.classList.remove('hidden');
+
+      if (!url || !key) {
+        fb.className = 'text-xs p-3 rounded-lg border border-red-500/50 bg-red-950/40 text-red-300';
+        fb.textContent = 'Informe a URL e a Anon Key para testar.';
+        return;
+      }
+
+      try {
+        const client = window.supabase.createClient(url, key);
+        const { error } = await client.from('alunos').select('count', { count: 'exact', head: true });
+        if (error && error.code !== '42P01') {
+          fb.className = 'text-xs p-3 rounded-lg border border-red-500/50 bg-red-950/40 text-red-300';
+          fb.textContent = 'Erro ao conectar: ' + error.message;
+        } else {
+          fb.className = 'text-xs p-3 rounded-lg border border-emerald-500/50 bg-emerald-950/40 text-emerald-300';
+          fb.textContent = 'Conexão com o Supabase estabelecida com sucesso!';
+        }
+      } catch(err) {
+        fb.className = 'text-xs p-3 rounded-lg border border-red-500/50 bg-red-950/40 text-red-300';
+        fb.textContent = 'Falha ao testar conexão: ' + err.message;
+      }
+    }
+
+    // Inicialização ao carregar a página
+    window.addEventListener('DOMContentLoaded', () => {
+      initSupabase();
+      switchTab('alunos');
+    });
+  </script>
+</body>
+</html>
