@@ -38,18 +38,39 @@
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
     .tabular-nums { font-variant-numeric: tabular-nums; }
+
+    @media print {
+      body * {
+        visibility: hidden !important;
+      }
+      #printable-relatorio-content,
+      #printable-relatorio-content * {
+        visibility: visible !important;
+      }
+      #printable-relatorio-content {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 16px !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
   </style>
-<script src="/_aistudio-iframe.js?v=1f94f900"></script></head>
+<script src="/_aistudio-iframe.js?v=29045eb3"></script></head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-violet-500/30">
 
   <!-- TOP BAR -->
   <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-30">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-[#daa520]/20 border border-[#daa520]/40 flex items-center justify-center text-[#daa520]">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12 0c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
-          </svg>
+        <div class="h-10 flex items-center justify-center shrink-0">
+          <img src="./assets/aistudio/LOGO_ESC._KS_f067226a.png" alt="Logo Escola de Música KS" class="h-10 w-auto object-contain">
         </div>
         <div>
           <span class="text-lg font-bold text-white tracking-tight">ESCOLA DE MÚSICA KS</span>
@@ -59,20 +80,23 @@
 
       <!-- Navigation Tabs -->
       <nav class="hidden md:flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
-        <button onclick="switchTab('alunos')" id="tab-btn-alunos" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-bold text-black bg-[#daa520] shadow-md shadow-[#daa520]/20 transition-colors">
+        <button onclick="switchTab('alunos')" id="tab-btn-alunos" class="tab-btn px-2.5 lg:px-3 py-1.5 rounded-lg text-xs font-bold text-black bg-[#daa520] shadow-md shadow-[#daa520]/20 transition-colors whitespace-nowrap">
           Alunos
         </button>
-        <button onclick="switchTab('professores')" id="tab-btn-professores" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors">
+        <button onclick="switchTab('professores')" id="tab-btn-professores" class="tab-btn px-2.5 lg:px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors whitespace-nowrap">
           Professores
         </button>
-        <button onclick="switchTab('aniversariantes')" id="tab-btn-aniversariantes" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors">
+        <button onclick="switchTab('aniversariantes')" id="tab-btn-aniversariantes" class="tab-btn px-2.5 lg:px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors whitespace-nowrap">
           Aniversariantes
         </button>
-        <button onclick="switchTab('pagamentos')" id="tab-btn-pagamentos" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors">
+        <button onclick="switchTab('pagamentos')" id="tab-btn-pagamentos" class="tab-btn px-2.5 lg:px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors whitespace-nowrap">
           Confirmação de Pagamento
         </button>
-        <button onclick="switchTab('historico')" id="tab-btn-historico" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors">
+        <button onclick="switchTab('historico')" id="tab-btn-historico" class="tab-btn px-2.5 lg:px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors whitespace-nowrap">
           Histórico de Pagamentos
+        </button>
+        <button onclick="switchTab('configuracoes')" id="tab-btn-configuracoes" class="tab-btn px-2.5 lg:px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors whitespace-nowrap">
+          Configurações
         </button>
       </nav>
 
@@ -93,6 +117,7 @@
     <button onclick="switchTab('aniversariantes')" id="mob-tab-aniversariantes" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300 font-medium">Aniversariantes</button>
     <button onclick="switchTab('pagamentos')" id="mob-tab-pagamentos" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300 font-medium">Pagamentos</button>
     <button onclick="switchTab('historico')" id="mob-tab-historico" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300 font-medium">Histórico</button>
+    <button onclick="switchTab('configuracoes')" id="mob-tab-configuracoes" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300 font-medium">Configurações</button>
   </div>
 
   <!-- MAIN CONTAINER -->
@@ -108,8 +133,8 @@
           <h2 class="text-2xl font-bold tracking-tight text-white font-display">Cadastro de Alunos</h2>
           <p class="text-sm text-slate-400">Gerencie a matrícula, dados pessoais e informações musicais de cada aluno.</p>
         </div>
-        <button onclick="openAlunoForm()" class="self-start sm:self-auto flex items-center gap-2 px-4 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition shadow-lg shadow-violet-600/20">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        <button onclick="openAlunoForm()" class="self-start sm:self-auto flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#daa520] hover:bg-[#c89619] text-[#000000] font-bold text-sm transition shadow-lg shadow-[#daa520]/25">
+          <svg class="w-4 h-4 text-[#000000]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
           Novo Aluno
         </button>
       </div>
@@ -183,8 +208,8 @@
           <h2 class="text-2xl font-bold tracking-tight text-white font-display">Cadastro de Professores</h2>
           <p class="text-sm text-slate-400">Cadastre os instrutores musicais, seus turnos, disciplinas e valor da mensalidade.</p>
         </div>
-        <button onclick="openProfessorForm()" class="self-start sm:self-auto flex items-center gap-2 px-4 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition shadow-lg shadow-violet-600/20">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        <button onclick="openProfessorForm()" class="self-start sm:self-auto flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#daa520] hover:bg-[#c89619] text-[#000000] font-bold text-sm transition shadow-lg shadow-[#daa520]/25">
+          <svg class="w-4 h-4 text-[#000000]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
           Novo Professor
         </button>
       </div>
@@ -383,38 +408,60 @@
       </div>
 
       <!-- 3 CAMPOS DE FILTRO: TURNO, HORÁRIO E NOME DO ALUNO -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
-        <div>
-          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">1. Turno</label>
-          <select id="filtro-historico-turno" onchange="updateHorariosFiltroHistorico(); renderHistoricoTable();" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 font-medium focus:outline-none focus:border-violet-500">
-            <option value="">Todos os Turnos</option>
-            <option value="Manhã">Manhã</option>
-            <option value="Tarde">Tarde</option>
-            <option value="Noite">Noite</option>
-          </select>
+      <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-[#daa520]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+              <span>Turno</span>
+            </label>
+            <select id="filtro-historico-turno" onchange="updateHorariosFiltroHistorico(); renderHistoricoTable();" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 font-medium focus:outline-none focus:border-[#daa520]">
+              <option value="">Todos os Turnos</option>
+              <option value="Manhã">Manhã</option>
+              <option value="Tarde">Tarde</option>
+              <option value="Noite">Noite</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-[#daa520]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span>Horário</span>
+            </label>
+            <select id="filtro-historico-horario" onchange="renderHistoricoTable()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 font-medium focus:outline-none focus:border-[#daa520]">
+              <option value="">Todos os Horários</option>
+              <option value="08:00">08:00</option>
+              <option value="09:00">09:00</option>
+              <option value="10:00">10:00</option>
+              <option value="11:00">11:00</option>
+              <option value="13:00">13:00</option>
+              <option value="14:00">14:00</option>
+              <option value="15:00">15:00</option>
+              <option value="16:00">16:00</option>
+              <option value="17:00">17:00</option>
+              <option value="18:00">18:00</option>
+              <option value="19:00">19:00</option>
+              <option value="20:00">20:00</option>
+              <option value="21:00">21:00</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-[#daa520]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <span>Nome do Aluno</span>
+            </label>
+            <input type="text" id="filtro-historico-nome" oninput="renderHistoricoTable()" placeholder="Buscar aluno cadastrado..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-[#daa520]">
+          </div>
         </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">2. Horário</label>
-          <select id="filtro-historico-horario" onchange="renderHistoricoTable()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 font-medium focus:outline-none focus:border-violet-500">
-            <option value="">Todos os Horários</option>
-            <option value="08:00">08:00</option>
-            <option value="09:00">09:00</option>
-            <option value="10:00">10:00</option>
-            <option value="11:00">11:00</option>
-            <option value="13:00">13:00</option>
-            <option value="14:00">14:00</option>
-            <option value="15:00">15:00</option>
-            <option value="16:00">16:00</option>
-            <option value="17:00">17:00</option>
-            <option value="18:00">18:00</option>
-            <option value="19:00">19:00</option>
-            <option value="20:00">20:00</option>
-            <option value="21:00">21:00</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">3. Nome do Aluno</label>
-          <input type="text" id="filtro-historico-nome" oninput="renderHistoricoTable()" placeholder="Buscar aluno cadastrado..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-violet-500">
+
+        <!-- BARRA DE AÇÃO COM O BOTÃO GERAR RELATÓRIO DIANTE DOS FILTROS ESCOLHIDOS -->
+        <div class="pt-3 border-t border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="text-xs text-slate-400">
+            Filtros ativos selecionados para emissão e impressão do relatório oficial em ordem alfabética.
+          </div>
+          <button type="button" onclick="openRelatorioHistorico()" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#daa520] hover:bg-[#c89619] text-[#000000] font-bold text-xs sm:text-sm shadow-md transition cursor-pointer">
+            <svg class="w-4 h-4 text-[#000000]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            <span>Gerar Relatório</span>
+          </button>
         </div>
       </div>
 
@@ -457,6 +504,194 @@
       </div>
     </div>
 
+    <!-- ==================================================== -->
+    <!-- ABA 6: CONFIGURAÇÕES -->
+    <!-- ==================================================== -->
+    <div id="view-configuracoes" class="hidden space-y-6">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-bold tracking-tight text-white font-display flex items-center gap-2.5">
+            <svg class="w-6 h-6 text-[#daa520]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span>Configurações</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1">
+            Gerencie horários das aulas por turno, instrumentos musicais, alunos e professores. Todas as alterações atualizam automaticamente os demais menus.
+          </p>
+        </div>
+
+        <!-- Seletor de Tópicos -->
+        <div class="flex flex-wrap items-center gap-1.5 bg-slate-900 p-1.5 rounded-2xl border border-slate-800 shadow-sm self-start">
+          <button type="button" onclick="setConfigSection('todos')" id="cfg-sec-btn-todos" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-[#daa520] text-[#000000] shadow-sm transition cursor-pointer">Todos</button>
+          <button type="button" onclick="setConfigSection('horarios')" id="cfg-sec-btn-horarios" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer">Horário das Aulas</button>
+          <button type="button" onclick="setConfigSection('instrumentos')" id="cfg-sec-btn-instrumentos" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer">Instrumentos</button>
+          <button type="button" onclick="setConfigSection('alunos')" id="cfg-sec-btn-alunos" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer">Alunos</button>
+          <button type="button" onclick="setConfigSection('professores')" id="cfg-sec-btn-professores" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer">Professores</button>
+          <button type="button" onclick="setConfigSection('contatos')" id="cfg-sec-btn-contatos" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer">Contatos da Escola</button>
+        </div>
+      </div>
+
+      <!-- TÓPICO 1: HORÁRIO DAS AULAS (SEPARADA POR TURNO) -->
+      <section id="cfg-section-horarios" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-sm space-y-5">
+        <div class="flex items-center gap-2.5 pb-4 border-b border-slate-800">
+          <div class="p-2 rounded-xl bg-[#daa520]/15 text-[#daa520]">
+            <svg class="w-5 h-5 text-[#daa520]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold font-display text-white">Horário das Aulas (Separado por Turno)</h3>
+            <p class="text-xs text-slate-400">Adicione, renomeie ou remova horários de cada turno. Altera automaticamente todos os seletores do sistema.</p>
+          </div>
+        </div>
+        <div id="cfg-horarios-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Renderizado via JS -->
+        </div>
+      </section>
+
+      <!-- TÓPICO 2: INSTRUMENTOS -->
+      <section id="cfg-section-instrumentos" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-sm space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+          <div class="flex items-center gap-2.5">
+            <div class="p-2 rounded-xl bg-[#daa520]/15 text-[#daa520]">
+              <svg class="w-5 h-5 text-[#daa520]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold font-display text-white">Instrumentos Ensinados</h3>
+              <p class="text-xs text-slate-400">Cadastre, edite ou remova os instrumentos oferecidos pela escola. Sincronizado com alunos e professores.</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <input type="text" id="cfg-novo-instrumento" onkeydown="if(event.key==='Enter'){event.preventDefault();addInstrumentoConfig();}" placeholder="Nome do instrumento..." class="flex-1 sm:w-56 bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#daa520]">
+            <button type="button" onclick="addInstrumentoConfig()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#daa520] hover:bg-[#c89619] text-[#000000] font-bold text-xs sm:text-sm transition cursor-pointer shrink-0">
+              <span>+ Adicionar</span>
+            </button>
+          </div>
+        </div>
+        <div id="cfg-instrumentos-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+          <!-- Renderizado via JS -->
+        </div>
+      </section>
+
+      <!-- TÓPICO 3: ALUNOS (5 COLUNAS EDITÁVEIS) -->
+      <section id="cfg-section-alunos" class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+        <div class="p-5 sm:p-6 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-2.5">
+            <div class="p-2 rounded-xl bg-[#daa520]/15 text-[#daa520]">
+              <svg class="w-5 h-5 text-[#daa520]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold font-display text-white">Alunos Cadastrados (<span id="cfg-alunos-count">0</span>)</h3>
+              <p class="text-xs text-slate-400">Modifique diretamente qualquer uma das 5 colunas abaixo para atualizar o cadastro automaticamente.</p>
+            </div>
+          </div>
+          <input type="text" id="cfg-aluno-search" oninput="renderConfigAlunosTable()" placeholder="Filtrar alunos..." class="w-full sm:w-64 bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#daa520]">
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs sm:text-sm text-slate-300">
+            <thead class="bg-slate-950/80 text-xs font-semibold uppercase tracking-wider text-slate-400 border-b border-slate-800">
+              <tr>
+                <th class="py-3 px-4 min-w-[210px]">1. Nome do Aluno</th>
+                <th class="py-3 px-4 w-28">2. Idade</th>
+                <th class="py-3 px-4 min-w-[130px]">3. Turno</th>
+                <th class="py-3 px-4 min-w-[130px]">4. Horário</th>
+                <th class="py-3 px-4 min-w-[190px]">5. Instrumento</th>
+              </tr>
+            </thead>
+            <tbody id="cfg-alunos-tbody" class="divide-y divide-slate-800/60">
+              <!-- Renderizado via JS -->
+            </tbody>
+          </table>
+        </div>
+        <div id="cfg-alunos-empty" class="hidden p-10 text-center text-xs sm:text-sm text-slate-500">
+          Nenhum aluno cadastrado para exibição.
+        </div>
+      </section>
+
+      <!-- TÓPICO 4: PROFESSORES (4 COLUNAS COM CAMPOS ACUMULATIVOS) -->
+      <section id="cfg-section-professores" class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+        <div class="p-5 sm:p-6 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-2.5">
+            <div class="p-2 rounded-xl bg-[#daa520]/15 text-[#daa520]">
+              <svg class="w-5 h-5 text-[#daa520]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold font-display text-white">Professores Cadastrados (<span id="cfg-professores-count">0</span>)</h3>
+              <p class="text-xs text-slate-400">Turno, Horário e Instrumento são acumulativos por professor. Adicione ou remova itens diretamente na linha.</p>
+            </div>
+          </div>
+          <input type="text" id="cfg-prof-search" oninput="renderConfigProfessoresTable()" placeholder="Filtrar professores..." class="w-full sm:w-64 bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#daa520]">
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs sm:text-sm text-slate-300">
+            <thead class="bg-slate-950/80 text-xs font-semibold uppercase tracking-wider text-slate-400 border-b border-slate-800">
+              <tr>
+                <th class="py-3 px-4 min-w-[200px]">1. Nome do Professor</th>
+                <th class="py-3 px-4 min-w-[180px]">2. Turno (Acumulativo)</th>
+                <th class="py-3 px-4 min-w-[200px]">3. Horário (Acumulativo)</th>
+                <th class="py-3 px-4 min-w-[230px]">4. Instrumento (Acumulativo)</th>
+              </tr>
+            </thead>
+            <tbody id="cfg-professores-tbody" class="divide-y divide-slate-800/60 align-top">
+              <!-- Renderizado via JS -->
+            </tbody>
+          </table>
+        </div>
+        <div id="cfg-professores-empty" class="hidden p-10 text-center text-xs sm:text-sm text-slate-500">
+          Nenhum professor cadastrado para exibição.
+        </div>
+      </section>
+
+      <!-- TÓPICO 5: CONTATOS DA ESCOLA -->
+      <section id="cfg-section-contatos" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-sm space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+          <div class="flex items-center gap-2.5">
+            <div class="p-2 rounded-xl bg-[#daa520]/15 text-[#daa520]">
+              <svg class="w-5 h-5 text-[#daa520]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold font-display text-white">Contatos da Escola</h3>
+              <p class="text-xs text-slate-400">Cadastre os canais oficiais da escola. O número em Celular (WhatsApp) é utilizado no envio automático do comprovante de pagamento para o aluno.</p>
+            </div>
+          </div>
+          <span id="cfg-contatos-saved-badge" class="hidden inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 self-start sm:self-auto">
+            ✓ Contatos salvos!
+          </span>
+        </div>
+
+        <form onsubmit="saveContatosEscolaConfig(event)" class="space-y-5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-2">
+              <label for="cfg-contato-whatsapp" class="block text-xs font-bold uppercase tracking-wider text-slate-200">Celular (WhatsApp)</label>
+              <input type="text" id="cfg-contato-whatsapp" placeholder="(11) 99999-9999" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm font-mono text-white placeholder-slate-500 focus:outline-none focus:border-[#daa520]">
+              <p class="text-[11px] text-[#daa520] font-medium">Contato oficial da escola usado para enviar automaticamente o comprovante de pagamento ao WhatsApp do aluno.</p>
+            </div>
+
+            <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-2">
+              <label for="cfg-contato-email" class="block text-xs font-bold uppercase tracking-wider text-slate-200">E-mail</label>
+              <input type="email" id="cfg-contato-email" placeholder="contato@escolademusicaks.com.br" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#daa520]">
+              <p class="text-[11px] text-slate-400">Endereço de e-mail oficial da secretaria da escola.</p>
+            </div>
+
+            <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-2">
+              <label for="cfg-contato-instagram" class="block text-xs font-bold uppercase tracking-wider text-slate-200">Instagram</label>
+              <input type="text" id="cfg-contato-instagram" placeholder="@escolademusicaks" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#daa520]">
+              <p class="text-[11px] text-slate-400">Perfil oficial no Instagram exibido nos comprovantes e comunicados.</p>
+            </div>
+
+            <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-2">
+              <label for="cfg-contato-youtube" class="block text-xs font-bold uppercase tracking-wider text-slate-200">YouTube</label>
+              <input type="text" id="cfg-contato-youtube" placeholder="@escolademusicaks ou URL do canal" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#daa520]">
+              <p class="text-[11px] text-slate-400">Canal oficial no YouTube com apresentações e aulas da escola.</p>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end pt-2 border-t border-slate-800">
+            <button type="submit" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#daa520] hover:bg-[#c89619] text-[#000000] font-bold text-xs sm:text-sm shadow-md shadow-[#daa520]/20 transition cursor-pointer">
+              <span>Salvar Contatos da Escola</span>
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+
   </main>
 
   <!-- ==================================================== -->
@@ -477,24 +712,24 @@
       <form id="form-aluno" onsubmit="handleSaveAluno(event)" class="space-y-6 pt-4">
         <input type="hidden" id="aluno-id" value="">
 
-        <!-- SEÇÃO 1: DADOS PESSOAIS (10 CAMPOS) -->
+        <!-- SEÇÃO 1: DADOS PESSOAIS -->
         <div>
-          <span class="text-xs font-semibold uppercase tracking-wider text-[#daa520] block mb-3">Informações Pessoais</span>
+          <span class="text-xs font-semibold uppercase tracking-wider text-[#daa520] block mb-3">Dados Pessoais</span>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             
             <div class="sm:col-span-2">
               <label class="block text-xs font-medium text-slate-300 mb-1">Nome Completo *</label>
-              <input type="text" id="aluno-nome-completo" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+              <input type="text" id="aluno-nome-completo" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
             </div>
 
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">Nome Social</label>
-              <input type="text" id="aluno-nome-social" placeholder="Opcional" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+              <input type="text" id="aluno-nome-social" placeholder="Opcional" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
             </div>
 
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">Data de Nascimento *</label>
-              <input type="date" id="aluno-data-nascimento" onchange="autoCalculateAge('aluno')" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+              <input type="date" id="aluno-data-nascimento" onchange="autoCalculateAge('aluno')" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
             </div>
 
             <div>
@@ -504,7 +739,7 @@
 
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">Tipo Sanguíneo</label>
-              <select id="aluno-tipo-sanguineo" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+              <select id="aluno-tipo-sanguineo" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
                 <option value="A+">A+</option>
                 <option value="A-">A-</option>
                 <option value="B+">B+</option>
@@ -519,38 +754,43 @@
 
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">E-mail</label>
-              <input type="email" id="aluno-email" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+              <input type="email" id="aluno-email" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
             </div>
 
             <div>
-              <label class="block text-xs font-medium text-slate-300 mb-1">Telefone de Contato *</label>
-              <input type="text" id="aluno-telefone" required placeholder="(11) 99999-9999" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+              <label class="block text-xs font-medium text-slate-300 mb-1">Instagram</label>
+              <input type="text" id="aluno-instagram" placeholder="@nomedeusuario" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
             </div>
 
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">Nome do Responsável (se menor)</label>
-              <input type="text" id="aluno-responsavel" placeholder="Opcional se maior de idade" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+              <input type="text" id="aluno-responsavel" placeholder="Opcional se maior de idade" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Telefone de Contato *</label>
+              <input type="text" id="aluno-telefone" required placeholder="(11) 99999-9999" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
             </div>
 
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">Cidade *</label>
-              <input type="text" id="aluno-cidade" required placeholder="São Paulo" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+              <input type="text" id="aluno-cidade" required placeholder="São Paulo" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
             </div>
 
             <div class="sm:col-span-2">
               <label class="block text-xs font-medium text-slate-300 mb-1">Observações Médicas ou Pedagógicas</label>
-              <textarea id="aluno-observacoes" rows="2" placeholder="Observações de saúde, restrições, preferências musicais..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500"></textarea>
+              <textarea id="aluno-observacoes" rows="2" placeholder="Observações de saúde, restrições, preferências musicais..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]"></textarea>
             </div>
           </div>
         </div>
 
-        <!-- SEÇÃO 2: DADOS MUSICAIS (3 CAMPOS) -->
+        <!-- SEÇÃO 2: INFORMAÇÕES MUSICAIS -->
         <div class="pt-4 border-t border-slate-800">
           <span class="text-xs font-semibold uppercase tracking-wider text-[#daa520] block mb-3">Informações Musicais</span>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">Turno *</label>
-              <select id="aluno-turno" onchange="updateHorariosSelect('aluno')" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+              <select id="aluno-turno" onchange="updateHorariosSelect('aluno')" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
                 <option value="Manhã">Manhã</option>
                 <option value="Tarde">Tarde</option>
                 <option value="Noite">Noite</option>
@@ -559,7 +799,7 @@
 
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">Horário da Aula *</label>
-              <select id="aluno-horario" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+              <select id="aluno-horario" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
                 <option value="08:00">08:00</option>
                 <option value="09:00" selected>09:00</option>
                 <option value="10:00">10:00</option>
@@ -569,7 +809,7 @@
 
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">Instrumento *</label>
-              <select id="aluno-instrumento" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+              <select id="aluno-instrumento" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
                 <option value="Piano">Piano</option>
                 <option value="Teclado">Teclado</option>
                 <option value="Violão Clássico">Violão Clássico</option>
@@ -585,12 +825,44 @@
                 <option value="Ukulele">Ukulele</option>
               </select>
             </div>
+
+            <!-- JÁ TOCA ALGUM INSTRUMENTO? (SIM OU NÃO) -->
+            <div class="sm:col-span-3 bg-slate-950/70 p-4 rounded-xl border border-slate-800 space-y-3">
+              <div class="flex items-center justify-between">
+                <label class="block text-xs font-medium text-slate-300">Já toca algum instrumento?</label>
+                <div class="inline-flex items-center p-1 bg-slate-900 rounded-lg border border-slate-800">
+                  <button type="button" id="btn-toca-nao" onclick="setJaTocaInstrumento(false)" class="px-3 py-1 rounded-md text-xs font-bold bg-[#daa520] text-black">NÃO</button>
+                  <button type="button" id="btn-toca-sim" onclick="setJaTocaInstrumento(true)" class="px-3 py-1 rounded-md text-xs font-bold text-slate-400">SIM</button>
+                </div>
+              </div>
+              <input type="hidden" id="aluno-ja-toca" value="false">
+              <div id="wrapper-qual-instrumento" class="hidden pt-2 border-t border-slate-800">
+                <label class="block text-xs font-medium text-slate-300 mb-1">Qual instrumento já toca?</label>
+                <input type="text" id="aluno-qual-instrumento" placeholder="ex: Violão, Teclado, Bateria, Flauta..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
+              </div>
+            </div>
+
+            <!-- DATA DA INSCRIÇÃO E MELHOR DIA PARA PAGAMENTO -->
+            <div class="sm:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Data da Inscrição</label>
+                <input type="date" id="aluno-data-inscricao" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Melhor dia para pagamento</label>
+                <select id="aluno-melhor-dia" onchange="handleMelhorDiaChange()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
+                  <option value="">Selecione o dia...</option>
+                </select>
+                <input type="hidden" id="aluno-data-pagamento" value="">
+                <p id="aluno-data-pagamento-preview" class="text-[11px] text-[#daa520] font-medium mt-1 hidden"></p>
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
           <button type="button" onclick="closeAlunoModal()" class="px-4 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 text-sm font-medium transition">Cancelar</button>
-          <button type="submit" id="btn-submit-aluno" class="px-5 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition shadow-lg shadow-violet-600/20">Salvar Aluno</button>
+          <button type="submit" id="btn-submit-aluno" class="px-5 py-2.5 rounded-xl bg-[#daa520] hover:bg-[#c89619] text-black font-bold text-sm transition shadow-lg shadow-[#daa520]/20">Salvar Aluno</button>
         </div>
       </form>
     </div>
@@ -760,6 +1032,271 @@
     </div>
   </div>
 
+  <!-- ==================================================== -->
+  <!-- MODAL: RELATÓRIO DO HISTÓRICO DE PAGAMENTOS (IMPRESSÃO) -->
+  <!-- ==================================================== -->
+  <div id="modal-relatorio-historico" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl my-auto">
+      <!-- Barra Superior do Modal (não sai na impressão) -->
+      <div class="no-print p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="p-2.5 rounded-xl bg-[#daa520]/20 text-[#daa520]">
+            <svg class="w-5 h-5 text-[#daa520]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+          <div>
+            <h3 class="font-bold text-white text-base sm:text-lg font-display">Relatório para Impressão</h3>
+            <p id="relatorio-subtitulo-modal" class="text-xs text-slate-400">Histórico de pagamentos em ordem alfabética</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="imprimirRelatorioHistorico()" class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#daa520] hover:bg-[#c89619] text-[#000000] font-bold text-xs sm:text-sm shadow-md transition cursor-pointer">
+            <svg class="w-4 h-4 text-[#000000]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            <span>Imprimir Relatório</span>
+          </button>
+          <button type="button" onclick="closeRelatorioHistorico()" class="p-2 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white transition cursor-pointer">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Conteúdo Oficial Imprimível -->
+      <div class="overflow-y-auto p-4 sm:p-8 space-y-6">
+        <div id="printable-relatorio-content" class="bg-white text-black p-6 sm:p-8 rounded-xl border border-slate-200">
+          <!-- Cabeçalho Oficial com Logo -->
+          <div class="flex items-center justify-between pb-6 border-b-2 border-black/80 gap-4">
+            <div class="flex items-center gap-4">
+              <img src="./assets/aistudio/LOGO_ESC._KS_f067226a.png" alt="Logo Escola de Música KS" style="filter: brightness(0);" class="h-16 w-auto object-contain">
+              <div>
+                <h1 class="text-xl sm:text-2xl font-black tracking-tight text-black font-display uppercase">ESCOLA DE MÚSICA KS</h1>
+                <p class="text-xs uppercase font-semibold tracking-wider text-slate-600">Gestão & Cadastro Musical</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="inline-block px-3 py-1 bg-black text-white text-[11px] font-bold uppercase tracking-wider rounded">Documento Oficial</span>
+              <p id="relatorio-data-emissao" class="text-[11px] text-slate-600 mt-1">Emitido em: --/--/----</p>
+            </div>
+          </div>
+
+          <!-- Título e Filtros Selecionados -->
+          <div class="my-6">
+            <h2 class="text-lg sm:text-xl font-bold uppercase text-black text-center tracking-wide pb-1">RELATÓRIO DE HISTÓRICO DE PAGAMENTOS</h2>
+            <p class="text-xs text-center text-slate-600 mb-4">Listagem em Ordem Alfabética</p>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+              <div>
+                <span class="font-bold text-slate-700 block">Mês de Referência:</span>
+                <span id="relatorio-filtro-mes" class="text-black font-semibold">--</span>
+              </div>
+              <div>
+                <span class="font-bold text-slate-700 block">Filtro de Turno:</span>
+                <span id="relatorio-filtro-turno" class="text-black">Todos</span>
+              </div>
+              <div>
+                <span class="font-bold text-slate-700 block">Filtro de Horário:</span>
+                <span id="relatorio-filtro-horario" class="text-black font-mono">Todos</span>
+              </div>
+              <div>
+                <span class="font-bold text-slate-700 block">Filtro de Nome:</span>
+                <span id="relatorio-filtro-nome" class="text-black">Todos</span>
+              </div>
+            </div>
+
+            <div class="mt-3 flex items-center justify-between text-xs px-1 text-slate-700">
+              <div>Total de alunos no relatório: <strong id="relatorio-stat-total" class="text-black">0</strong></div>
+              <div class="flex items-center gap-3">
+                <span>Pagos: <strong id="relatorio-stat-pagos" class="text-black">0</strong></span>
+                <span>Pendentes: <strong id="relatorio-stat-pendentes" class="text-[#ff0000]">0</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- TABELA COM AS 5 COLUNAS SOLICITADAS:
+              1. Nome do aluno
+              2. Turno
+              3. Horário
+              4. Data de vencimento
+              5. Data de pagamento
+          -->
+          <div class="border border-black/70 rounded-md overflow-hidden">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-100 text-black border-b border-black font-bold uppercase tracking-wider text-[11px]">
+                  <th class="py-2.5 px-3 border-r border-slate-300 w-[30%]">1. Nome do Aluno</th>
+                  <th class="py-2.5 px-3 border-r border-slate-300 w-[15%] text-center">2. Turno</th>
+                  <th class="py-2.5 px-3 border-r border-slate-300 w-[15%] text-center">3. Horário</th>
+                  <th class="py-2.5 px-3 border-r border-slate-300 w-[18%] text-center">4. Data de Vencimento</th>
+                  <th class="py-2.5 px-3 w-[22%] text-center">5. Data de Pagamento</th>
+                </tr>
+              </thead>
+              <tbody id="relatorio-historico-tbody" class="divide-y divide-slate-200">
+                <!-- Inserido dinamicamente via JS em ordem alfabética -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Rodapé do Relatório Impresso -->
+          <div class="mt-12 pt-6 border-t border-slate-300 grid grid-cols-2 gap-8 text-center text-xs">
+            <div>
+              <div class="border-b border-black w-3/4 mx-auto mb-2"></div>
+              <span class="font-bold text-black block">Secretaria Escolar</span>
+              <span class="text-[10px] text-slate-500">Escola de Música KS</span>
+            </div>
+            <div>
+              <div class="border-b border-black w-3/4 mx-auto mb-2"></div>
+              <span class="font-bold text-black block">Coordenação Pedagógica</span>
+              <span class="text-[10px] text-slate-500">Visto / Conferência</span>
+            </div>
+          </div>
+
+          <div class="mt-8 text-center text-[10px] text-slate-500">
+            Documento gerado automaticamente pelo Sistema de Gestão da Escola de Música KS.
+          </div>
+        </div>
+      </div>
+
+      <!-- Rodapé do Modal (não sai na impressão) -->
+      <div class="no-print p-4 border-t border-slate-800 flex items-center justify-between bg-slate-950 rounded-b-2xl">
+        <span class="text-xs text-slate-500">
+          Pressione <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-[10px] font-mono">Ctrl+P</kbd> ou clique em Imprimir Relatório.
+        </span>
+        <button type="button" onclick="closeRelatorioHistorico()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition cursor-pointer">
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================== -->
+  <!-- MODAL: COMPROVANTE DE PAGAMENTO JPG & DISPARO WHATSAPP -->
+  <!-- ==================================================== -->
+  <div id="modal-comprovante-pagamento" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl my-auto overflow-hidden">
+      <!-- Cabeçalho do Modal -->
+      <div class="p-5 border-b border-slate-800 flex items-center justify-between gap-4 bg-slate-950/40">
+        <div class="flex items-center gap-3">
+          <div class="p-2.5 rounded-2xl bg-[#daa520]/20 text-[#daa520] border border-[#daa520]/30">
+            <svg class="w-5 h-5 text-[#daa520]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          </div>
+          <div>
+            <h3 class="font-bold text-white text-base sm:text-lg font-display">Comprovante Oficial de Pagamento</h3>
+            <p class="text-xs text-slate-400">Modelo JPG gerado com envio direto para o WhatsApp do aluno</p>
+          </div>
+        </div>
+        <button type="button" onclick="fecharModalComprovante()" class="p-2 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white transition cursor-pointer">
+          ✕
+        </button>
+      </div>
+
+      <!-- Corpo do Modal -->
+      <div class="overflow-y-auto p-5 sm:p-6 space-y-5">
+        <!-- Remetente (WhatsApp da Escola) e Destinatário (WhatsApp do Aluno) -->
+        <div class="bg-emerald-950/30 border border-emerald-800/50 rounded-2xl p-4 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="p-2 rounded-xl bg-emerald-500/20 text-emerald-400">
+                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+              </div>
+              <div>
+                <span class="text-[11px] uppercase font-bold text-emerald-300 tracking-wider block">
+                  Envio para WhatsApp do Aluno / Responsável
+                </span>
+                <span id="comp-destinatario-tel" class="font-mono font-bold text-emerald-200 text-sm">--</span>
+                <span id="comp-destinatario-resp" class="text-xs text-slate-400 ml-2"></span>
+              </div>
+            </div>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-600 text-white shadow-sm self-start sm:self-auto">
+              <span>✓ Quitação Confirmada</span>
+            </span>
+          </div>
+
+          <div class="pt-2.5 border-t border-emerald-800/40 flex flex-wrap items-center gap-2 text-xs">
+            <span class="font-semibold text-slate-400">WhatsApp da Escola (Remetente):</span>
+            <span id="comp-remetente-escola" class="font-mono font-bold text-[#daa520]">--</span>
+          </div>
+        </div>
+
+        <!-- As 6 Informações do Aluno no Comprovante -->
+        <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-4 space-y-3">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block pb-1 border-b border-slate-800">
+            Informações do Aluno Inseridas no Comprovante
+          </span>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-800">
+              <span class="text-slate-400 block font-semibold text-[10px] uppercase">1. Nome do Aluno</span>
+              <span id="comp-info-nome" class="font-bold text-white text-sm">--</span>
+            </div>
+            <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-800">
+              <span class="text-slate-400 block font-semibold text-[10px] uppercase">2. Instrumento</span>
+              <span id="comp-info-instrumento" class="font-bold text-[#daa520] text-sm">--</span>
+            </div>
+            <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-800">
+              <span class="text-slate-400 block font-semibold text-[10px] uppercase">3. Turno</span>
+              <span id="comp-info-turno" class="font-semibold text-slate-200">--</span>
+            </div>
+            <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-800">
+              <span class="text-slate-400 block font-semibold text-[10px] uppercase">4. Horário</span>
+              <span id="comp-info-horario" class="font-mono font-semibold text-slate-200">--</span>
+            </div>
+            <div class="p-2.5 bg-slate-900 rounded-xl border border-slate-800">
+              <span class="text-slate-400 block font-semibold text-[10px] uppercase">5. Data de Vencimento</span>
+              <span id="comp-info-vencimento" class="font-mono font-bold text-white">--</span>
+            </div>
+            <div class="p-2.5 bg-emerald-950/40 rounded-xl border border-emerald-800/60">
+              <span class="text-emerald-400 block font-semibold text-[10px] uppercase">6. Data de Pagamento</span>
+              <span id="comp-info-pagamento" class="font-mono font-bold text-emerald-300">--</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pré-visualização da Imagem JPG Gerada -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-[#daa520]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              <span>Modelo JPG Gerado (Comprovante Oficial)</span>
+            </span>
+            <span id="comp-jpg-loading" class="text-xs text-[#daa520] hidden animate-pulse">
+              Gerando imagem JPG...
+            </span>
+          </div>
+
+          <div class="relative group rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 flex items-center justify-center p-3 shadow-inner">
+            <img id="comp-jpg-preview" src="" alt="Comprovante de Pagamento Oficial" class="max-h-72 w-auto object-contain rounded-xl shadow-lg border border-slate-800">
+            <!-- Canvas oculto para renderizar JPG -->
+            <canvas id="canvas-comprovante-html" width="1200" height="1500" class="hidden"></canvas>
+          </div>
+        </div>
+
+        <!-- Texto Formatado para WhatsApp -->
+        <div class="bg-slate-950/80 rounded-2xl p-3.5 border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold uppercase text-slate-400 tracking-wider">
+              Mensagem para WhatsApp
+            </span>
+            <button type="button" onclick="copiarTextoComprovante()" class="text-xs font-semibold text-[#daa520] hover:text-[#c89619] flex items-center gap-1 cursor-pointer">
+              <span id="comp-btn-copiar-txt">Copiar Texto</span>
+            </button>
+          </div>
+          <pre id="comp-texto-whatsapp" class="text-[11px] font-mono text-slate-300 whitespace-pre-wrap line-clamp-4 bg-slate-900/70 p-2.5 rounded-xl border border-slate-800/60"></pre>
+        </div>
+      </div>
+
+      <!-- Rodapé de Ações do Modal -->
+      <div class="p-4 sm:p-5 border-t border-slate-800 bg-slate-950/60 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <button type="button" onclick="baixarComprovanteJpg()" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-100 font-bold text-xs shadow-sm transition cursor-pointer">
+          <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          <span>Baixar Imagem JPG</span>
+        </button>
+
+        <button type="button" onclick="enviarComprovanteWhatsApp()" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-lg shadow-emerald-600/25 transition cursor-pointer">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+          <span>Enviar pelo WhatsApp da Escola</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- JAVASCRIPT PURO & SUPABASE INTEGRATION -->
   <script>
     // ESTADO DA APLICAÇÃO
@@ -767,11 +1304,152 @@
     let currentTurnoPagamento = 'Manhã';
     let supabaseClient = null;
 
-    const HORARIOS = {
+    const TURNOS_LIST = ['Manhã', 'Tarde', 'Noite'];
+    const DEFAULT_HORARIOS = {
       'Manhã': ['08:00', '09:00', '10:00', '11:00'],
       'Tarde': ['13:00', '14:00', '15:00', '16:00', '17:00'],
       'Noite': ['18:00', '19:00', '20:00', '21:00']
     };
+    const DEFAULT_INSTRUMENTOS = [
+      'Piano', 'Teclado', 'Violão Clássico', 'Violão Popular',
+      'Guitarra Elétrica', 'Contrabaixo', 'Bateria',
+      'Canto / Técnica Vocal', 'Violino', 'Violoncelo',
+      'Saxofone', 'Flauta Transversal', 'Ukulele',
+      'Musicalização Infantil', 'Teoria & Harmonia'
+    ];
+
+    const DEFAULT_CONTATOS_ESCOLA = {
+      whatsapp: '',
+      email: '',
+      instagram: '',
+      youtube: ''
+    };
+
+    function loadSchoolSettings() {
+      try {
+        const raw = localStorage.getItem('escola_ks_settings');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          return {
+            horariosPorTurno: {
+              'Manhã': Array.isArray(parsed?.horariosPorTurno?.['Manhã']) ? [...parsed.horariosPorTurno['Manhã']] : [...DEFAULT_HORARIOS['Manhã']],
+              'Tarde': Array.isArray(parsed?.horariosPorTurno?.['Tarde']) ? [...parsed.horariosPorTurno['Tarde']] : [...DEFAULT_HORARIOS['Tarde']],
+              'Noite': Array.isArray(parsed?.horariosPorTurno?.['Noite']) ? [...parsed.horariosPorTurno['Noite']] : [...DEFAULT_HORARIOS['Noite']]
+            },
+            instrumentos: Array.isArray(parsed?.instrumentos) ? [...parsed.instrumentos] : [...DEFAULT_INSTRUMENTOS],
+            contatosEscola: {
+              whatsapp: String(parsed?.contatosEscola?.whatsapp || '').trim(),
+              email: String(parsed?.contatosEscola?.email || '').trim(),
+              instagram: String(parsed?.contatosEscola?.instagram || '').trim(),
+              youtube: String(parsed?.contatosEscola?.youtube || '').trim()
+            }
+          };
+        }
+      } catch(e) {}
+      return {
+        horariosPorTurno: {
+          'Manhã': [...DEFAULT_HORARIOS['Manhã']],
+          'Tarde': [...DEFAULT_HORARIOS['Tarde']],
+          'Noite': [...DEFAULT_HORARIOS['Noite']]
+        },
+        instrumentos: [...DEFAULT_INSTRUMENTOS],
+        contatosEscola: { ...DEFAULT_CONTATOS_ESCOLA }
+      };
+    }
+
+    let schoolSettings = loadSchoolSettings();
+    let HORARIOS = schoolSettings.horariosPorTurno;
+
+    function getAllHorariosConfig() {
+      const set = new Set();
+      TURNOS_LIST.forEach(t => {
+        (schoolSettings.horariosPorTurno[t] || []).forEach(h => {
+          if (h && h.trim()) set.add(h.trim());
+        });
+      });
+      return Array.from(set).sort((a, b) => a.localeCompare(b));
+    }
+
+    function saveSchoolSettings(next) {
+      const normalizedHorarios = {
+        'Manhã': Array.from(new Set((next.horariosPorTurno['Manhã'] || []).map(s => s.trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b)),
+        'Tarde': Array.from(new Set((next.horariosPorTurno['Tarde'] || []).map(s => s.trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b)),
+        'Noite': Array.from(new Set((next.horariosPorTurno['Noite'] || []).map(s => s.trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b))
+      };
+      const normalizedInst = Array.from(new Set((next.instrumentos || []).map(s => s.trim()).filter(Boolean)));
+      const normalizedContatos = {
+        whatsapp: String(next.contatosEscola?.whatsapp ?? schoolSettings.contatosEscola?.whatsapp ?? '').trim(),
+        email: String(next.contatosEscola?.email ?? schoolSettings.contatosEscola?.email ?? '').trim(),
+        instagram: String(next.contatosEscola?.instagram ?? schoolSettings.contatosEscola?.instagram ?? '').trim(),
+        youtube: String(next.contatosEscola?.youtube ?? schoolSettings.contatosEscola?.youtube ?? '').trim()
+      };
+      schoolSettings = {
+        horariosPorTurno: normalizedHorarios,
+        instrumentos: normalizedInst,
+        contatosEscola: normalizedContatos
+      };
+      HORARIOS = schoolSettings.horariosPorTurno;
+      try {
+        localStorage.setItem('escola_ks_settings', JSON.stringify(schoolSettings));
+      } catch(e) {}
+      refreshAllConfigDrivenUI();
+    }
+
+    function computeDataPagamentoFromDia(diaStr) {
+      const diaNum = parseInt(diaStr, 10);
+      if (isNaN(diaNum) || diaNum < 1 || diaNum > 31) return '';
+      const now = new Date();
+      const ano = now.getFullYear();
+      const mes = now.getMonth() + 1;
+      const maxDiasNoMes = new Date(ano, mes, 0).getDate();
+      const diaValido = Math.min(diaNum, maxDiasNoMes);
+      return `${ano}-${String(mes).padStart(2, '0')}-${String(diaValido).padStart(2, '0')}`;
+    }
+
+    function extractDiaFromDataPagamento(dataPagamento) {
+      if (!dataPagamento) return '';
+      const parts = String(dataPagamento).split('-');
+      if (parts.length === 3) {
+        const d = parseInt(parts[2], 10);
+        if (!isNaN(d) && d >= 1 && d <= 31) {
+          return String(d).padStart(2, '0');
+        }
+      }
+      return '';
+    }
+
+    function populateMelhorDiaOptions() {
+      const sel = document.getElementById('aluno-melhor-dia');
+      if (!sel || sel.options.length > 1) return;
+      for (let d = 1; d <= 31; d++) {
+        const val = String(d).padStart(2, '0');
+        const opt = document.createElement('option');
+        opt.value = val;
+        opt.textContent = `Dia ${val}`;
+        sel.appendChild(opt);
+      }
+    }
+
+    function updateDataPagamentoPreview(dataPagamento) {
+      const preview = document.getElementById('aluno-data-pagamento-preview');
+      if (!preview) return;
+      if (dataPagamento && dataPagamento.includes('-')) {
+        const parts = dataPagamento.split('-');
+        preview.textContent = `Data para pagamento: ${parts[2]}/${parts[1]}/${parts[0]}`;
+        preview.classList.remove('hidden');
+      } else {
+        preview.textContent = '';
+        preview.classList.add('hidden');
+      }
+    }
+
+    function handleMelhorDiaChange() {
+      const dia = document.getElementById('aluno-melhor-dia')?.value || '';
+      const computed = dia ? computeDataPagamentoFromDia(dia) : '';
+      const hiddenEl = document.getElementById('aluno-data-pagamento');
+      if (hiddenEl) hiddenEl.value = computed;
+      updateDataPagamentoPreview(computed);
+    }
 
     // Dados em Memória / LocalStorage (100% Zerado para uso real)
     try {
@@ -843,17 +1521,17 @@
     // NAVEGAÇÃO DE ABAS
     function switchTab(tab) {
       currentTab = tab;
-      ['alunos', 'professores', 'aniversariantes', 'pagamentos', 'historico'].forEach(t => {
+      ['alunos', 'professores', 'aniversariantes', 'pagamentos', 'historico', 'configuracoes'].forEach(t => {
         const view = document.getElementById(`view-${t}`);
         const btn = document.getElementById(`tab-btn-${t}`);
         const mobBtn = document.getElementById(`mob-tab-${t}`);
         if (t === tab) {
           if (view) view.classList.remove('hidden');
-          if (btn) btn.className = 'tab-btn px-3 py-1.5 rounded-lg text-xs font-bold text-black bg-[#daa520] shadow-md shadow-[#daa520]/20 transition-colors';
+          if (btn) btn.className = 'tab-btn px-2.5 lg:px-3 py-1.5 rounded-lg text-xs font-bold text-black bg-[#daa520] shadow-md shadow-[#daa520]/20 transition-colors whitespace-nowrap';
           if (mobBtn) mobBtn.className = 'px-3 py-1.5 rounded-lg whitespace-nowrap bg-[#daa520] text-black font-bold shadow-sm';
         } else {
           if (view) view.classList.add('hidden');
-          if (btn) btn.className = 'tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors';
+          if (btn) btn.className = 'tab-btn px-2.5 lg:px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors whitespace-nowrap';
           if (mobBtn) mobBtn.className = 'px-3 py-1.5 rounded-lg whitespace-nowrap bg-slate-800 text-slate-300 font-medium';
         }
       });
@@ -866,7 +1544,11 @@
         renderPagamentosTable();
       }
       if (tab === 'historico') {
+        updateHorariosFiltroHistorico();
         renderHistoricoTable();
+      }
+      if (tab === 'configuracoes') {
+        renderConfiguracoes();
       }
     }
 
@@ -891,19 +1573,79 @@
       }
     }
 
-    function updateHorariosSelect(type) {
-      const turno = document.getElementById(type === 'aluno' ? 'aluno-turno' : 'prof-turno').value;
+    function updateHorariosSelect(type, preserveValue) {
+      const turnoEl = document.getElementById(type === 'aluno' ? 'aluno-turno' : 'prof-turno');
       const select = document.getElementById(type === 'aluno' ? 'aluno-horario' : 'prof-horario');
-      const list = HORARIOS[turno] || [];
+      if (!turnoEl || !select) return;
+      const turno = turnoEl.value;
+      const baseList = HORARIOS[turno] || [];
+      const currentVal = preserveValue !== undefined ? preserveValue : select.value;
+      const list = currentVal && !baseList.includes(currentVal) ? [...baseList, currentVal] : baseList;
       select.innerHTML = list.map(h => `<option value="${h}">${h}</option>`).join('');
+      if (currentVal && list.includes(currentVal)) {
+        select.value = currentVal;
+      }
+    }
+
+    function populateAlunoInstrumentosSelect(extraInst) {
+      const sel = document.getElementById('aluno-instrumento');
+      if (!sel) return;
+      const prev = extraInst !== undefined ? extraInst : sel.value;
+      const list = prev && !schoolSettings.instrumentos.includes(prev)
+        ? [...schoolSettings.instrumentos, prev]
+        : schoolSettings.instrumentos;
+      sel.innerHTML = list.map(inst => `<option value="${inst}">${inst}</option>`).join('');
+      if (prev && list.includes(prev)) sel.value = prev;
+    }
+
+    function populateFiltroAlunoInstrumento() {
+      const sel = document.getElementById('filtro-aluno-instrumento');
+      if (!sel) return;
+      const prev = sel.value;
+      sel.innerHTML = '<option value="">Todos os Instrumentos</option>' +
+        schoolSettings.instrumentos.map(inst => `<option value="${inst}">${inst}</option>`).join('');
+      if (prev && schoolSettings.instrumentos.includes(prev)) sel.value = prev;
+    }
+
+    function refreshAllConfigDrivenUI() {
+      populateFiltroAlunoInstrumento();
+      populateAlunoInstrumentosSelect();
+      updateHorariosSelect('aluno');
+      populateHorariosPagamento();
+      updateHorariosFiltroHistorico();
+      renderProfHorariosList();
+      renderProfInstrumentosList();
+      renderAlunosTable();
+      renderProfessoresTable();
+      renderPagamentosTable();
+      renderHistoricoTable();
+      if (currentTab === 'configuracoes') renderConfiguracoes();
     }
 
     // ================= GERENCIAMENTO DE ALUNOS =================
+    function setJaTocaInstrumento(sim) {
+      document.getElementById('aluno-ja-toca').value = sim ? 'true' : 'false';
+      const btnNao = document.getElementById('btn-toca-nao');
+      const btnSim = document.getElementById('btn-toca-sim');
+      const wrapper = document.getElementById('wrapper-qual-instrumento');
+      if (sim) {
+        btnSim.className = 'px-3 py-1 rounded-md text-xs font-bold bg-[#daa520] text-black';
+        btnNao.className = 'px-3 py-1 rounded-md text-xs font-bold text-slate-400';
+        wrapper.classList.remove('hidden');
+      } else {
+        btnNao.className = 'px-3 py-1 rounded-md text-xs font-bold bg-[#daa520] text-black';
+        btnSim.className = 'px-3 py-1 rounded-md text-xs font-bold text-slate-400';
+        wrapper.classList.add('hidden');
+        document.getElementById('aluno-qual-instrumento').value = '';
+      }
+    }
+
     function openAlunoForm(editId = null) {
       const modal = document.getElementById('modal-aluno');
       const title = document.getElementById('modal-aluno-title');
       const form = document.getElementById('form-aluno');
-      
+      populateMelhorDiaOptions();
+
       if (editId) {
         const a = alunos.find(x => String(x.id) === String(editId));
         if (!a) return;
@@ -915,18 +1657,37 @@
         document.getElementById('aluno-idade').value = a.idade;
         document.getElementById('aluno-tipo-sanguineo').value = a.tipo_sanguineo || 'Não informado';
         document.getElementById('aluno-email').value = a.email || '';
+        document.getElementById('aluno-instagram').value = a.instagram || '';
         document.getElementById('aluno-responsavel').value = a.nome_responsavel || '';
         document.getElementById('aluno-telefone').value = a.telefone_contato;
         document.getElementById('aluno-cidade').value = a.cidade;
         document.getElementById('aluno-observacoes').value = a.observacoes || '';
         document.getElementById('aluno-turno').value = a.turno;
-        updateHorariosSelect('aluno');
+        updateHorariosSelect('aluno', a.horario);
         document.getElementById('aluno-horario').value = a.horario;
+        populateAlunoInstrumentosSelect(a.instrumento);
         document.getElementById('aluno-instrumento').value = a.instrumento;
+        setJaTocaInstrumento(Boolean(a.ja_toca_instrumento));
+        document.getElementById('aluno-qual-instrumento').value = a.qual_instrumento || '';
+        document.getElementById('aluno-data-inscricao').value = a.data_inscricao || new Date().toISOString().split('T')[0];
+
+        const diaPgto = extractDiaFromDataPagamento(a.data_pagamento);
+        const melhorDiaSel = document.getElementById('aluno-melhor-dia');
+        if (melhorDiaSel) melhorDiaSel.value = diaPgto;
+        const computedPgto = a.data_pagamento || (diaPgto ? computeDataPagamentoFromDia(diaPgto) : '');
+        document.getElementById('aluno-data-pagamento').value = computedPgto;
+        updateDataPagamentoPreview(computedPgto);
       } else {
         title.textContent = 'Cadastrar Novo Aluno';
         form.reset();
         document.getElementById('aluno-id').value = '';
+        setJaTocaInstrumento(false);
+        document.getElementById('aluno-data-inscricao').value = new Date().toISOString().split('T')[0];
+        const melhorDiaSel = document.getElementById('aluno-melhor-dia');
+        if (melhorDiaSel) melhorDiaSel.value = '';
+        document.getElementById('aluno-data-pagamento').value = '';
+        updateDataPagamentoPreview('');
+        populateAlunoInstrumentosSelect();
         updateHorariosSelect('aluno');
       }
       modal.classList.remove('hidden');
@@ -939,6 +1700,7 @@
     async function handleSaveAluno(e) {
       e.preventDefault();
       const id = document.getElementById('aluno-id').value;
+      const jaToca = document.getElementById('aluno-ja-toca').value === 'true';
       const data = {
         nome_completo: document.getElementById('aluno-nome-completo').value.trim(),
         nome_social: document.getElementById('aluno-nome-social').value.trim(),
@@ -946,13 +1708,18 @@
         idade: parseInt(document.getElementById('aluno-idade').value || '0', 10),
         tipo_sanguineo: document.getElementById('aluno-tipo-sanguineo').value,
         email: document.getElementById('aluno-email').value.trim(),
+        instagram: document.getElementById('aluno-instagram').value.trim(),
         nome_responsavel: document.getElementById('aluno-responsavel').value.trim(),
         telefone_contato: document.getElementById('aluno-telefone').value.trim(),
         cidade: document.getElementById('aluno-cidade').value.trim(),
         observacoes: document.getElementById('aluno-observacoes').value.trim(),
         turno: document.getElementById('aluno-turno').value,
         horario: document.getElementById('aluno-horario').value,
-        instrumento: document.getElementById('aluno-instrumento').value
+        instrumento: document.getElementById('aluno-instrumento').value,
+        ja_toca_instrumento: jaToca,
+        qual_instrumento: jaToca ? document.getElementById('aluno-qual-instrumento').value.trim() : '',
+        data_inscricao: document.getElementById('aluno-data-inscricao').value,
+        data_pagamento: document.getElementById('aluno-data-pagamento').value
       };
 
       if (id) {
@@ -999,6 +1766,12 @@
       renderPagamentosTable();
     }
 
+    function formatDateBr(iso) {
+      if (!iso || !iso.includes('-')) return iso || '';
+      const p = iso.split('-');
+      return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : iso;
+    }
+
     function renderAlunosTable() {
       const tbody = document.getElementById('alunos-table-body');
       const empty = document.getElementById('alunos-empty');
@@ -1032,12 +1805,15 @@
           </td>
           <td class="py-3.5 px-4 whitespace-nowrap">
             <span class="text-[#daa520] font-medium">${a.instrumento}</span>
+            ${a.ja_toca_instrumento ? `<div class="text-[11px] text-slate-400">Já toca: <span class="text-slate-300 font-medium">${a.qual_instrumento || 'Sim'}</span></div>` : ''}
           </td>
           <td class="py-3.5 px-4 whitespace-nowrap">
             <span class="text-xs text-slate-300">${a.turno} · <span class="font-mono">${a.horario}</span></span>
+            ${a.data_pagamento ? `<div class="text-[10px] text-[#daa520] font-medium">Pgto: ${formatDateBr(a.data_pagamento)}</div>` : ''}
           </td>
           <td class="py-3.5 px-4 text-xs">
             <div>${a.telefone_contato}</div>
+            ${a.instagram ? `<div class="text-[#daa520] font-medium">IG: ${a.instagram}</div>` : ''}
             <div class="text-slate-400">${a.cidade}</div>
           </td>
           <td class="py-3.5 px-4 text-right whitespace-nowrap">
@@ -1053,13 +1829,6 @@
     }
 
     // ================= GERENCIAMENTO DE PROFESSORES =================
-    const ALL_INSTRUMENTOS_LIST = [
-      'Piano', 'Teclado', 'Violão Clássico', 'Violão Popular',
-      'Guitarra Elétrica', 'Contrabaixo', 'Bateria',
-      'Canto / Técnica Vocal', 'Violino', 'Violoncelo',
-      'Saxofone', 'Flauta Transversal', 'Ukulele'
-    ];
-
     let profTurnos = ['Manhã'];
     let profHorarios = ['09:00'];
     let profInstrumentos = ['Piano'];
@@ -1069,7 +1838,7 @@
       if (!container) return;
       container.innerHTML = profTurnos.map((t, idx) => `
         <div class="flex items-center gap-2">
-          <select onchange="profTurnos[${idx}] = this.value" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
+          <select onchange="profTurnos[${idx}] = this.value" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
             <option value="Manhã" ${t === 'Manhã' ? 'selected' : ''}>🌅 Manhã</option>
             <option value="Tarde" ${t === 'Tarde' ? 'selected' : ''}>☀️ Tarde</option>
             <option value="Noite" ${t === 'Noite' ? 'selected' : ''}>🌙 Noite</option>
@@ -1098,11 +1867,13 @@
     function renderProfHorariosList() {
       const container = document.getElementById('prof-horarios-list');
       if (!container) return;
-      const allTimes = ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'];
-      container.innerHTML = profHorarios.map((h, idx) => `
+      const allTimes = getAllHorariosConfig();
+      container.innerHTML = profHorarios.map((h, idx) => {
+        const opts = h && !allTimes.includes(h) ? [...allTimes, h] : allTimes;
+        return `
         <div class="flex items-center gap-2">
-          <select onchange="profHorarios[${idx}] = this.value" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
-            ${allTimes.map(time => `<option value="${time}" ${time === h ? 'selected' : ''}>${time}</option>`).join('')}
+          <select onchange="profHorarios[${idx}] = this.value" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
+            ${opts.map(time => `<option value="${time}" ${time === h ? 'selected' : ''}>${time}</option>`).join('')}
           </select>
           ${profHorarios.length > 1 ? `
             <button type="button" onclick="removeProfHorarioRow(${idx})" class="p-2 text-slate-500 hover:text-red-400 rounded-lg hover:bg-slate-800 transition" title="Remover este horário">
@@ -1110,11 +1881,13 @@
             </button>
           ` : ''}
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
     function addProfHorarioRow() {
-      profHorarios.push('10:00');
+      const allTimes = getAllHorariosConfig();
+      profHorarios.push(allTimes[1] || allTimes[0] || '10:00');
       renderProfHorariosList();
     }
 
@@ -1128,10 +1901,13 @@
     function renderProfInstrumentosList() {
       const container = document.getElementById('prof-instrumentos-list');
       if (!container) return;
-      container.innerHTML = profInstrumentos.map((inst, idx) => `
+      const baseInsts = schoolSettings.instrumentos;
+      container.innerHTML = profInstrumentos.map((inst, idx) => {
+        const opts = inst && !baseInsts.includes(inst) ? [...baseInsts, inst] : baseInsts;
+        return `
         <div class="flex items-center gap-2">
-          <select onchange="profInstrumentos[${idx}] = this.value" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-violet-500">
-            ${ALL_INSTRUMENTOS_LIST.map(item => `<option value="${item}" ${item === inst ? 'selected' : ''}>${item}</option>`).join('')}
+          <select onchange="profInstrumentos[${idx}] = this.value" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#daa520]">
+            ${opts.map(item => `<option value="${item}" ${item === inst ? 'selected' : ''}>${item}</option>`).join('')}
           </select>
           ${profInstrumentos.length > 1 ? `
             <button type="button" onclick="removeProfInstrumentoRow(${idx})" class="p-2 text-slate-500 hover:text-red-400 rounded-lg hover:bg-slate-800 transition" title="Remover este instrumento">
@@ -1139,11 +1915,13 @@
             </button>
           ` : ''}
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
     function addProfInstrumentoRow() {
-      profInstrumentos.push('Violão Popular');
+      const baseInsts = schoolSettings.instrumentos;
+      profInstrumentos.push(baseInsts[3] || baseInsts[0] || 'Violão Popular');
       renderProfInstrumentosList();
     }
 
@@ -1398,10 +2176,13 @@
     async function togglePago(alunoId, mes, checkbox) {
       const isChecked = checkbox.checked;
       const idx = pagamentos.findIndex(p => String(p.aluno_id) === String(alunoId) && p.mes === mes);
+      const isoDate = isChecked ? new Date().toISOString() : null;
+
       if (idx >= 0) {
         pagamentos[idx].pago = isChecked;
+        if (isChecked) pagamentos[idx].data_pagamento = isoDate;
       } else {
-        pagamentos.push({ aluno_id: alunoId, mes: mes, pago: isChecked });
+        pagamentos.push({ aluno_id: alunoId, mes: mes, pago: isChecked, data_pagamento: isoDate });
       }
       localStorage.setItem('escola_ks_pagamentos', JSON.stringify(pagamentos));
 
@@ -1411,12 +2192,17 @@
             aluno_id: alunoId,
             mes: mes,
             pago: isChecked,
-            data_pagamento: isChecked ? new Date().toISOString() : null
+            data_pagamento: isoDate
           }, { onConflict: 'aluno_id,mes' });
         } catch(e) { console.error('Erro ao atualizar no Supabase:', e); }
       }
 
       renderPagamentosTable();
+
+      // Ao clicar na opção de confirmação do pagamento, abre automaticamente o comprovante para envio
+      if (isChecked) {
+        abrirModalComprovante(alunoId, mes);
+      }
     }
 
     function renderPagamentosTable() {
@@ -1472,14 +2258,23 @@
               <span class="text-[10px] text-slate-500 block mt-0.5">Automático: Dia atual + mês selecionado</span>
             </td>
 
-            <!-- COLUNA 3: CHECKBOX / BOTÃO DE MARCAÇÃO "PAGO" -->
+            <!-- COLUNA 3: CHECKBOX / BOTÃO DE CONFIRMAÇÃO DO PAGAMENTO E BOTÃO GERAR E ENVIAR COMPROVANTE -->
             <td class="py-4 px-6 text-center">
-              <label class="inline-flex items-center gap-2.5 cursor-pointer select-none">
-                <input type="checkbox" onchange="togglePago('${a.id}', '${defaultMes}', this)" ${estaPago ? 'checked' : ''} class="w-5 h-5 rounded text-emerald-600 bg-slate-950 border-slate-700 focus:ring-emerald-500">
-                <span class="text-sm font-semibold ${estaPago ? 'text-emerald-400' : 'text-slate-400'}">
-                  ${estaPago ? '✓ PAGO' : 'PENDENTE'}
-                </span>
-              </label>
+              <div class="flex flex-wrap items-center justify-center gap-2">
+                <label class="inline-flex items-center gap-2.5 cursor-pointer select-none">
+                  <input type="checkbox" onchange="togglePago('${a.id}', '${defaultMes}', this)" ${estaPago ? 'checked' : ''} class="w-5 h-5 rounded text-emerald-600 bg-slate-950 border-slate-700 focus:ring-emerald-500 cursor-pointer">
+                  <span class="text-sm font-semibold ${estaPago ? 'text-emerald-400' : 'text-[#ff0000]'}">
+                    ${estaPago ? '✓ PAGO' : 'PENDENTE'}
+                  </span>
+                </label>
+
+                ${estaPago ? `
+                  <button type="button" onclick="abrirModalComprovante('${a.id}', '${defaultMes}')" title="Gerar e Enviar Comprovante Oficial via WhatsApp" class="px-2.5 py-1.5 rounded-xl bg-[#daa520] hover:bg-[#c89619] text-[#000000] font-bold text-xs flex items-center gap-1.5 shadow-sm shadow-[#daa520]/25 transition cursor-pointer whitespace-nowrap animate-in fade-in">
+                    <svg class="w-3.5 h-3.5 text-[#000000]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                    <span>Gerar e Enviar Comprovante</span>
+                  </button>
+                ` : ''}
+              </div>
             </td>
           </tr>
         `;
@@ -1506,28 +2301,20 @@
 
     // ================= TELA: HISTÓRICO DE PAGAMENTOS =================
     function updateHorariosFiltroHistorico() {
-      const turno = document.getElementById('filtro-historico-turno').value;
+      const turno = document.getElementById('filtro-historico-turno')?.value || '';
       const select = document.getElementById('filtro-historico-horario');
+      if (!select) return;
+      const prev = select.value;
       if (!turno) {
-        select.innerHTML = `
-          <option value="">Todos os Horários</option>
-          <option value="08:00">08:00</option>
-          <option value="09:00">09:00</option>
-          <option value="10:00">10:00</option>
-          <option value="11:00">11:00</option>
-          <option value="13:00">13:00</option>
-          <option value="14:00">14:00</option>
-          <option value="15:00">15:00</option>
-          <option value="16:00">16:00</option>
-          <option value="17:00">17:00</option>
-          <option value="18:00">18:00</option>
-          <option value="19:00">19:00</option>
-          <option value="20:00">20:00</option>
-          <option value="21:00">21:00</option>
-        `;
+        const all = getAllHorariosConfig();
+        select.innerHTML = '<option value="">Todos os Horários</option>' +
+          all.map(h => `<option value="${h}">${h}</option>`).join('');
       } else {
         const list = HORARIOS[turno] || [];
         select.innerHTML = `<option value="">Todos de ${turno}</option>` + list.map(h => `<option value="${h}">${h}</option>`).join('');
+      }
+      if (prev && Array.from(select.options).some(o => o.value === prev)) {
+        select.value = prev;
       }
     }
 
@@ -1623,15 +2410,485 @@
                   <span>${dataPagamentoDisplay}</span>
                 </div>
               ` : `
-                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-amber-950/40 border border-amber-800/40 text-amber-300">
-                  <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                  <span>Pendente de Pagamento</span>
+                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-red-950/40 border border-red-900/50 text-[#ff0000]">
+                  <span class="w-2 h-2 rounded-full bg-[#ff0000]"></span>
+                  <span class="text-[#ff0000]">Pendente de Pagamento</span>
                 </div>
               `}
             </td>
           </tr>
         `;
       }).join('');
+    }
+
+    // ================= RELATÓRIO DO HISTÓRICO DE PAGAMENTOS =================
+    function openRelatorioHistorico() {
+      const mesReferencia = document.getElementById('select-mes-historico')?.value || 'Novembro/2026';
+      const filtroTurno = document.getElementById('filtro-historico-turno')?.value || '';
+      const filtroHorario = document.getElementById('filtro-historico-horario')?.value || '';
+      const filtroNome = (document.getElementById('filtro-historico-nome')?.value || '').toLowerCase().trim();
+
+      // Filtragem da lista de alunos cadastrados e ordenação estrita em ordem alfabética
+      const filtrados = alunos.filter(a => {
+        const matchTurno = !filtroTurno || a.turno === filtroTurno;
+        const matchHorario = !filtroHorario || a.horario === filtroHorario;
+        const matchNome = !filtroNome || 
+          a.nome_completo.toLowerCase().includes(filtroNome) || 
+          (a.nome_social && a.nome_social.toLowerCase().includes(filtroNome));
+        return matchTurno && matchHorario && matchNome;
+      }).sort((a, b) => a.nome_completo.localeCompare(b.nome_completo, 'pt-BR'));
+
+      let pagosCount = 0;
+      filtrados.forEach(a => {
+        const pag = pagamentos.find(p => String(p.aluno_id) === String(a.id) && p.mes === mesReferencia);
+        if (pag && pag.pago) pagosCount++;
+      });
+
+      // Atualizar textos e metadados no cabeçalho do relatório
+      const elMes = document.getElementById('relatorio-filtro-mes');
+      const elTurno = document.getElementById('relatorio-filtro-turno');
+      const elHorario = document.getElementById('relatorio-filtro-horario');
+      const elNome = document.getElementById('relatorio-filtro-nome');
+      const elStatTotal = document.getElementById('relatorio-stat-total');
+      const elStatPagos = document.getElementById('relatorio-stat-pagos');
+      const elStatPend = document.getElementById('relatorio-stat-pendentes');
+      const elDataEmissao = document.getElementById('relatorio-data-emissao');
+      const elSubtitulo = document.getElementById('relatorio-subtitulo-modal');
+
+      if (elMes) elMes.textContent = mesReferencia;
+      if (elTurno) elTurno.textContent = filtroTurno || 'Todos os Turnos';
+      if (elHorario) elHorario.textContent = filtroHorario || 'Todos os Horários';
+      if (elNome) elNome.textContent = filtroNome ? `"${filtroNome}"` : 'Todos os Alunos';
+      if (elStatTotal) elStatTotal.textContent = filtrados.length;
+      if (elStatPagos) elStatPagos.textContent = pagosCount;
+      if (elStatPend) elStatPend.textContent = (filtrados.length - pagosCount);
+      if (elSubtitulo) elSubtitulo.textContent = `${filtrados.length} ${filtrados.length === 1 ? 'aluno listado' : 'alunos listados'} em ordem alfabética • ${mesReferencia}`;
+
+      const now = new Date();
+      if (elDataEmissao) {
+        elDataEmissao.textContent = `Emitido em: ${now.toLocaleDateString('pt-BR')} às ${now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+      }
+
+      // Preencher a tabela com as 5 COLUNAS SOLICITADAS:
+      // 1. Nome do aluno
+      // 2. Turno
+      // 3. Horário
+      // 4. Data de vencimento
+      // 5. Data de pagamento
+      const tbody = document.getElementById('relatorio-historico-tbody');
+      if (tbody) {
+        if (filtrados.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="5" class="py-6 text-center text-slate-500 italic">
+                Nenhum aluno encontrado para os filtros selecionados.
+              </td>
+            </tr>
+          `;
+        } else {
+          tbody.innerHTML = filtrados.map((a, idx) => {
+            const pag = pagamentos.find(p => String(p.aluno_id) === String(a.id) && p.mes === mesReferencia);
+            const estaPago = pag ? Boolean(pag.pago) : false;
+
+            // Formatação da data de vencimento
+            let dataVencimento = '10/11/2026';
+            if (a.data_pagamento) {
+              const parts = a.data_pagamento.split('-');
+              if (parts.length === 3) {
+                dataVencimento = `${parts[2]}/${parts[1]}/${parts[0]}`;
+              } else {
+                dataVencimento = a.data_pagamento;
+              }
+            }
+
+            // Formatação da data de pagamento
+            let dataPagamentoDisplay = '';
+            if (estaPago) {
+              if (pag.data_pagamento) {
+                const d = new Date(pag.data_pagamento);
+                dataPagamentoDisplay = `${d.toLocaleDateString('pt-BR')} às ${d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+              } else {
+                dataPagamentoDisplay = `Confirmado em ${mesReferencia}`;
+              }
+            }
+
+            return `
+              <tr class="${idx % 2 === 1 ? 'bg-slate-50' : 'bg-white'}">
+                <!-- 1. Nome do aluno -->
+                <td class="py-2.5 px-3 border-r border-slate-300 font-semibold text-black">
+                  <div class="text-xs font-bold text-black">${a.nome_completo}</div>
+                  <div class="text-[10px] text-slate-600">
+                    ${a.instrumento || 'Música'} ${a.nome_social ? `(${a.nome_social})` : ''}
+                  </div>
+                </td>
+
+                <!-- 2. Turno -->
+                <td class="py-2.5 px-3 border-r border-slate-300 text-center font-medium text-black">
+                  ${a.turno}
+                </td>
+
+                <!-- 3. Horário -->
+                <td class="py-2.5 px-3 border-r border-slate-300 text-center font-mono font-medium text-black">
+                  ${a.horario}
+                </td>
+
+                <!-- 4. Data de vencimento -->
+                <td class="py-2.5 px-3 border-r border-slate-300 text-center font-mono text-black font-medium">
+                  ${dataVencimento}
+                </td>
+
+                <!-- 5. Data de pagamento -->
+                <td class="py-2.5 px-3 text-center">
+                  ${estaPago ? `
+                    <span class="font-semibold text-emerald-800 font-mono text-[11px]">
+                      ${dataPagamentoDisplay}
+                    </span>
+                  ` : `
+                    <span class="font-bold text-[#ff0000] text-[11px]">
+                      PENDENTE
+                    </span>
+                  `}
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+
+      document.getElementById('modal-relatorio-historico').classList.remove('hidden');
+    }
+
+    function closeRelatorioHistorico() {
+      document.getElementById('modal-relatorio-historico').classList.add('hidden');
+    }
+
+    function imprimirRelatorioHistorico() {
+      window.print();
+    }
+
+    // ================= COMPROVANTE DE PAGAMENTO EM JPG & WHATSAPP =================
+    let currentComprovanteData = null;
+
+    async function abrirModalComprovante(alunoId, mes) {
+      const aluno = alunos.find(a => String(a.id) === String(alunoId));
+      if (!aluno) return;
+
+      const pag = pagamentos.find(p => String(p.aluno_id) === String(alunoId) && p.mes === mes);
+      const defaultMes = mes || document.getElementById('select-mes-pagamento')?.value || 'Novembro/2026';
+
+      // 1. Data de Vencimento
+      let vencimento = '10/11/2026';
+      if (aluno.data_pagamento) {
+        const parts = aluno.data_pagamento.split('-');
+        if (parts.length === 3) {
+          vencimento = `${parts[2]}/${parts[1]}/${parts[0]}`;
+        } else {
+          vencimento = aluno.data_pagamento;
+        }
+      }
+
+      // 2. Data de Pagamento
+      let dataPagamento = '';
+      const now = new Date();
+      if (pag && pag.data_pagamento) {
+        const d = new Date(pag.data_pagamento);
+        dataPagamento = `${d.toLocaleDateString('pt-BR')} às ${d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+      } else {
+        dataPagamento = `${now.toLocaleDateString('pt-BR')} às ${now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+      }
+
+      // 3. Preencher campos do modal
+      document.getElementById('comp-destinatario-tel').textContent = aluno.telefone_contato || 'Telefone não informado';
+      document.getElementById('comp-destinatario-resp').textContent = aluno.nome_responsavel ? `(${aluno.nome_responsavel})` : '';
+      const remEl = document.getElementById('comp-remetente-escola');
+      const contatos = schoolSettings.contatosEscola || {};
+      if (remEl) {
+        if (contatos.whatsapp) {
+          remEl.textContent = contatos.whatsapp;
+          remEl.className = 'font-mono font-bold text-[#daa520] bg-[#daa520]/10 px-2 py-0.5 rounded border border-[#daa520]/30';
+        } else {
+          remEl.textContent = 'Não cadastrado (configure em Configurações → Contatos da Escola)';
+          remEl.className = 'text-amber-400 font-medium';
+        }
+      }
+
+      document.getElementById('comp-info-nome').textContent = aluno.nome_completo;
+      document.getElementById('comp-info-instrumento').textContent = aluno.instrumento;
+      document.getElementById('comp-info-turno').textContent = aluno.turno;
+      document.getElementById('comp-info-horario').textContent = '⏰ ' + aluno.horario;
+      document.getElementById('comp-info-vencimento').textContent = vencimento;
+      document.getElementById('comp-info-pagamento').textContent = '✓ ' + dataPagamento;
+
+      // 4. Montar texto para o WhatsApp
+      const contactLines = [];
+      if (contatos.whatsapp) contactLines.push(`📱 *WhatsApp da Escola:* ${contatos.whatsapp}`);
+      if (contatos.email) contactLines.push(`✉️ *E-mail:* ${contatos.email}`);
+      if (contatos.instagram) contactLines.push(`📸 *Instagram:* ${contatos.instagram}`);
+      if (contatos.youtube) contactLines.push(`▶️ *YouTube:* ${contatos.youtube}`);
+      const contactsBlock = contactLines.length > 0 ? `\n\n📌 *Canais Oficiais da Escola:*\n${contactLines.join('\n')}` : '';
+
+      const hash = (aluno.id ? aluno.id.toString().substring(0, 6) : 'KS') + '-' + Date.now().toString(36).toUpperCase().substring(0, 4);
+      const whatsappText = `🎵 *ESCOLA DE MÚSICA KS* 🎵
+*COMPROVANTE DE PAGAMENTO DE MENSALIDADE*
+════════════════════════════════
+
+Olá! Segue a confirmação oficial de quitação da mensalidade:
+
+👤 *Nome do Aluno:* ${aluno.nome_completo}${aluno.nome_social ? ` (${aluno.nome_social})` : ''}
+🌅 *Turno:* ${aluno.turno}
+⏰ *Horário:* ${aluno.horario}
+🎸 *Instrumento:* ${aluno.instrumento}
+📅 *Data de Vencimento:* ${vencimento}
+✅ *Data de Pagamento:* ${dataPagamento}
+🗓️ *Mês de Referência:* ${defaultMes}
+${aluno.nome_responsavel ? `👨‍👩‍👧 *Responsável:* ${aluno.nome_responsavel}\n` : ''}
+🧾 *Autenticação do Recibo:* #KS-${hash}
+
+════════════════════════════════
+_Comprovante gerado automaticamente pela Secretaria da Escola de Música KS._
+_Obrigado por sua confiança em nosso trabalho musical!_ 🎹🎶${contactsBlock}`;
+
+      document.getElementById('comp-texto-whatsapp').textContent = whatsappText;
+
+      // 5. Renderizar o Comprovante no Canvas para exportar como JPG
+      const loadingEl = document.getElementById('comp-jpg-loading');
+      if (loadingEl) loadingEl.classList.remove('hidden');
+
+      const canvas = document.getElementById('canvas-comprovante-html');
+      const ctx = canvas.getContext('2d');
+      const width = 1200;
+      const height = 1500;
+      canvas.width = width;
+      canvas.height = height;
+
+      // Fundo e moldura dourada
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.fillStyle = '#FAF9F5';
+      ctx.fillRect(20, 20, width - 40, height - 40);
+
+      ctx.strokeStyle = '#DAA520';
+      ctx.lineWidth = 6;
+      ctx.strokeRect(30, 30, width - 60, height - 60);
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(42, 42, width - 84, height - 84);
+
+      // Cabeçalho escuro
+      ctx.fillStyle = '#0F172A';
+      ctx.fillRect(50, 50, width - 100, 210);
+      ctx.fillStyle = '#DAA520';
+      ctx.fillRect(50, 256, width - 100, 6);
+
+      // Tentar desenhar imagem do logo se disponível
+      try {
+        const logoImg = new Image();
+        logoImg.crossOrigin = 'anonymous';
+        logoImg.src = './assets/aistudio/LOGO_ESC._KS_f067226a.png';
+        await new Promise((res) => {
+          logoImg.onload = res;
+          logoImg.onerror = res;
+        });
+        if (logoImg.complete && logoImg.naturalWidth > 0) {
+          ctx.drawImage(logoImg, 75, 75, 160, 160);
+        }
+      } catch(e) {}
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 44px sans-serif';
+      ctx.fillText('ESCOLA DE MÚSICA KS', 255, 125);
+
+      ctx.fillStyle = '#DAA520';
+      ctx.font = 'bold 20px sans-serif';
+      ctx.fillText('GESTÃO & CADASTRO MUSICAL', 255, 160);
+
+      ctx.fillStyle = '#94A3B8';
+      ctx.font = '16px sans-serif';
+      ctx.fillText('Documento Oficial de Comprovação de Pagamento', 255, 195);
+      ctx.fillText(`Mês de Referência: ${defaultMes}`, 255, 222);
+
+      // Título
+      ctx.fillStyle = '#0F172A';
+      ctx.font = 'bold 36px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('COMPROVANTE DE PAGAMENTO', width / 2, 320);
+
+      ctx.fillStyle = '#64748B';
+      ctx.font = '18px sans-serif';
+      ctx.fillText('Quitação de Mensalidade Escolar', width / 2, 350);
+
+      // Selo de Quitação
+      const stampX = width / 2 - 190;
+      const stampY = 380;
+      ctx.fillStyle = '#ECFDF5';
+      ctx.strokeStyle = '#059669';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.roundRect(stampX, stampY, 380, 65, 16);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#059669';
+      ctx.font = 'bold 26px sans-serif';
+      ctx.fillText('✓ PAGAMENTO CONFIRMADO', width / 2, stampY + 42);
+
+      // As 6 informações solicitadas
+      const infoFields = [
+        { label: 'NOME DO ALUNO', value: aluno.nome_completo, highlight: true },
+        { label: 'TURNO', value: aluno.turno },
+        { label: 'HORÁRIO', value: '⏰ ' + aluno.horario },
+        { label: 'INSTRUMENTO', value: aluno.instrumento },
+        { label: 'DATA DE VENCIMENTO', value: vencimento },
+        { label: 'DATA DE PAGAMENTO', value: '✓ ' + dataPagamento, isPaidDate: true }
+      ];
+
+      ctx.textAlign = 'left';
+      const startY = 480;
+      const cardW = width - 140;
+      const rowH = 75;
+
+      infoFields.forEach((field, i) => {
+        const y = startY + i * (rowH + 12);
+        ctx.fillStyle = field.isPaidDate ? '#F0FDF4' : (i % 2 === 0 ? '#FFFFFF' : '#F8FAFC');
+        ctx.strokeStyle = field.isPaidDate ? '#86EFAC' : '#E2E8F0';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(70, y, cardW, rowH, 12);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = field.isPaidDate ? '#10B981' : (field.highlight ? '#DAA520' : '#64748B');
+        ctx.fillRect(70, y, 8, rowH);
+
+        ctx.fillStyle = '#64748B';
+        ctx.font = 'bold 16px sans-serif';
+        ctx.fillText(field.label, 95, y + 30);
+
+        ctx.fillStyle = field.isPaidDate ? '#065F46' : '#0F172A';
+        ctx.font = field.highlight ? 'bold 24px sans-serif' : 'bold 22px sans-serif';
+        ctx.fillText(field.value, 95, y + 60);
+      });
+
+      // Extra
+      const extraY = startY + infoFields.length * (rowH + 12) + 20;
+      ctx.fillStyle = '#F8FAFC';
+      ctx.strokeStyle = '#CBD5E1';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(70, extraY, cardW, 140, 12);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#0F172A';
+      ctx.font = 'bold 16px sans-serif';
+      ctx.fillText('INFORMAÇÕES COMPLEMENTARES', 95, extraY + 32);
+
+      ctx.font = '16px sans-serif';
+      ctx.fillStyle = '#475569';
+      ctx.fillText(`Responsável: ${aluno.nome_responsavel || 'O Próprio Aluno'}`, 95, extraY + 65);
+      ctx.fillText(`WhatsApp / Contato: ${aluno.telefone_contato || 'Não informado'}`, 95, extraY + 95);
+      ctx.fillText(`Cidade: ${aluno.cidade || 'Local'} • Mês: ${defaultMes}`, 95, extraY + 122);
+
+      // Rodapé
+      const footerY = height - 225;
+      ctx.strokeStyle = '#94A3B8';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(width / 2 - 200, footerY + 45);
+      ctx.lineTo(width / 2 + 200, footerY + 45);
+      ctx.stroke();
+
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#0F172A';
+      ctx.font = 'bold 18px sans-serif';
+      ctx.fillText('SECRETARIA ESCOLAR · ESCOLA DE MÚSICA KS', width / 2, footerY + 72);
+
+      ctx.fillStyle = '#64748B';
+      ctx.font = '14px sans-serif';
+      ctx.fillText('Comprovante gerado eletronicamente e válido como recibo de quitação.', width / 2, footerY + 96);
+      ctx.fillText(`Data de Emissão: ${now.toLocaleDateString('pt-BR')} às ${now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`, width / 2, footerY + 118);
+
+      const cParts1 = [];
+      if (contatos.whatsapp) cParts1.push(`WhatsApp: ${contatos.whatsapp}`);
+      if (contatos.email) cParts1.push(`E-mail: ${contatos.email}`);
+      const cParts2 = [];
+      if (contatos.instagram) cParts2.push(`Instagram: ${contatos.instagram}`);
+      if (contatos.youtube) cParts2.push(`YouTube: ${contatos.youtube}`);
+      if (cParts1.length > 0 || cParts2.length > 0) {
+        ctx.fillStyle = '#B8860B';
+        ctx.font = 'bold 13px sans-serif';
+        if (cParts1.length > 0) ctx.fillText(cParts1.join('  •  '), width / 2, footerY + 144);
+        if (cParts2.length > 0) ctx.fillText(cParts2.join('  •  '), width / 2, footerY + (cParts1.length > 0 ? 164 : 144));
+      }
+
+      // Exportar para JPG
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+      const imgPreview = document.getElementById('comp-jpg-preview');
+      if (imgPreview) imgPreview.src = dataUrl;
+
+      if (loadingEl) loadingEl.classList.add('hidden');
+
+      const sanitizedNome = aluno.nome_completo.replace(/[^a-zA-Z0-9]/g, '_');
+      const filename = `Comprovante_Pagamento_${sanitizedNome}_${defaultMes.replace('/', '_')}.jpg`;
+
+      currentComprovanteData = {
+        dataUrl,
+        filename,
+        aluno,
+        text: whatsappText
+      };
+
+      document.getElementById('modal-comprovante-pagamento').classList.remove('hidden');
+    }
+
+    function fecharModalComprovante() {
+      document.getElementById('modal-comprovante-pagamento').classList.add('hidden');
+    }
+
+    function baixarComprovanteJpg() {
+      if (!currentComprovanteData) return;
+      const link = document.createElement('a');
+      link.href = currentComprovanteData.dataUrl;
+      link.download = currentComprovanteData.filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function enviarComprovanteWhatsApp() {
+      if (!currentComprovanteData) return;
+      // 1. Baixar a imagem JPG automaticamente
+      baixarComprovanteJpg();
+
+      // 2. Abrir WhatsApp com texto formatado
+      const rawPhone = currentComprovanteData.aluno.telefone_contato || '';
+      const cleanPhone = rawPhone.replace(/\D/g, '');
+      const fullPhone = cleanPhone.startsWith('55')
+        ? cleanPhone
+        : cleanPhone.length >= 10
+        ? '55' + cleanPhone
+        : cleanPhone;
+
+      const url = `https://api.whatsapp.com/send?phone=${fullPhone}&text=${encodeURIComponent(currentComprovanteData.text)}`;
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    async function copiarTextoComprovante() {
+      if (!currentComprovanteData) return;
+      try {
+        await navigator.clipboard.writeText(currentComprovanteData.text);
+        const btnTxt = document.getElementById('comp-btn-copiar-txt');
+        if (btnTxt) {
+          btnTxt.textContent = 'Copiado!';
+          setTimeout(() => { btnTxt.textContent = 'Copiar Texto'; }, 2000);
+        }
+      } catch(e) {}
     }
 
     // ================= SUPABASE MODAL =================
@@ -1682,8 +2939,571 @@
       }
     }
 
+    // ================= TELA 6: CONFIGURAÇÕES =================
+    let cfgActiveSection = 'todos';
+    let cfgEditingHorario = null; // { turno, oldVal }
+    let cfgEditingInstrumento = null; // oldVal
+    let cfgSavedAlunoId = null;
+    let cfgSavedProfId = null;
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function setConfigSection(sec) {
+      cfgActiveSection = sec;
+      ['todos', 'horarios', 'instrumentos', 'alunos', 'professores', 'contatos'].forEach(s => {
+        const btn = document.getElementById(`cfg-sec-btn-${s}`);
+        if (btn) {
+          btn.className = s === sec
+            ? 'px-3 py-1.5 rounded-xl text-xs font-bold bg-[#daa520] text-[#000000] shadow-sm transition cursor-pointer'
+            : 'px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer';
+        }
+      });
+      ['horarios', 'instrumentos', 'alunos', 'professores', 'contatos'].forEach(s => {
+        const el = document.getElementById(`cfg-section-${s}`);
+        if (el) {
+          if (sec === 'todos' || sec === s) el.classList.remove('hidden');
+          else el.classList.add('hidden');
+        }
+      });
+    }
+
+    function renderConfiguracoes() {
+      renderConfigHorarios();
+      renderConfigInstrumentos();
+      renderConfigAlunosTable();
+      renderConfigProfessoresTable();
+      renderConfigContatos();
+    }
+
+    function renderConfigContatos() {
+      const c = schoolSettings.contatosEscola || DEFAULT_CONTATOS_ESCOLA;
+      const w = document.getElementById('cfg-contato-whatsapp');
+      const e = document.getElementById('cfg-contato-email');
+      const i = document.getElementById('cfg-contato-instagram');
+      const y = document.getElementById('cfg-contato-youtube');
+      if (w) w.value = c.whatsapp || '';
+      if (e) e.value = c.email || '';
+      if (i) i.value = c.instagram || '';
+      if (y) y.value = c.youtube || '';
+    }
+
+    function saveContatosEscolaConfig(ev) {
+      if (ev) ev.preventDefault();
+      const whatsapp = (document.getElementById('cfg-contato-whatsapp')?.value || '').trim();
+      const email = (document.getElementById('cfg-contato-email')?.value || '').trim();
+      const instagram = (document.getElementById('cfg-contato-instagram')?.value || '').trim();
+      const youtube = (document.getElementById('cfg-contato-youtube')?.value || '').trim();
+      saveSchoolSettings({
+        ...schoolSettings,
+        contatosEscola: { whatsapp, email, instagram, youtube }
+      });
+      const badge = document.getElementById('cfg-contatos-saved-badge');
+      if (badge) {
+        badge.classList.remove('hidden');
+        setTimeout(() => badge.classList.add('hidden'), 2500);
+      }
+    }
+
+    function renderConfigHorarios() {
+      const grid = document.getElementById('cfg-horarios-grid');
+      if (!grid) return;
+      grid.innerHTML = TURNOS_LIST.map(turno => {
+        const list = schoolSettings.horariosPorTurno[turno] || [];
+        const turnoId = turno.replace(/\W/g, '');
+        return `
+          <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-sm text-white">${turno === 'Manhã' ? '🌅 Manhã' : turno === 'Tarde' ? '☀️ Tarde' : '🌙 Noite'}</span>
+                <span class="text-[11px] font-semibold text-slate-400 tabular-nums">${list.length} horário(s)</span>
+              </div>
+              <div class="space-y-1.5 max-h-60 overflow-y-auto pr-1">
+                ${list.length === 0 ? '<p class="text-xs text-slate-500 italic py-3 text-center">Nenhum horário cadastrado neste turno.</p>' : list.map(h => {
+                  const isEditing = cfgEditingHorario && cfgEditingHorario.turno === turno && cfgEditingHorario.oldVal === h;
+                  if (isEditing) {
+                    return `
+                      <div class="flex items-center gap-1.5 bg-slate-900 border border-[#daa520] rounded-xl px-2.5 py-1.5">
+                        <input type="time" id="cfg-edit-horario-input" value="${escapeHtml(h)}" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white focus:outline-none">
+                        <button type="button" onclick="confirmRenameHorarioConfig('${turno}', '${escapeHtml(h)}')" class="px-2 py-1 rounded-lg bg-[#daa520] text-[#000000] font-bold text-xs cursor-pointer">OK</button>
+                        <button type="button" onclick="cfgEditingHorario=null;renderConfigHorarios()" class="px-2 py-1 rounded-lg text-slate-400 hover:text-white text-xs cursor-pointer">✕</button>
+                      </div>
+                    `;
+                  }
+                  return `
+                    <div class="flex items-center justify-between gap-2 bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5">
+                      <span class="font-mono text-xs font-bold text-slate-200">⏰ ${escapeHtml(h)}</span>
+                      <div class="flex items-center gap-1">
+                        <button type="button" onclick="cfgEditingHorario={turno:'${turno}',oldVal:'${escapeHtml(h)}'};renderConfigHorarios()" title="Editar horário" class="p-1 text-slate-400 hover:text-[#daa520] rounded-lg transition cursor-pointer">✏️</button>
+                        <button type="button" onclick="removeHorarioConfig('${turno}', '${escapeHtml(h)}')" title="Remover horário" class="p-1 text-slate-400 hover:text-red-400 rounded-lg transition cursor-pointer">🗑️</button>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+            <div class="pt-3 border-t border-slate-800 flex items-center gap-2">
+              <input type="time" id="cfg-new-horario-${turnoId}" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs font-mono text-white focus:outline-none focus:border-[#daa520]">
+              <button type="button" onclick="addHorarioConfig('${turno}', 'cfg-new-horario-${turnoId}')" class="px-3 py-1.5 rounded-xl bg-[#daa520] hover:bg-[#c89619] text-[#000000] font-bold text-xs transition cursor-pointer">+ Adicionar</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addHorarioConfig(turno, inputId) {
+      const inp = document.getElementById(inputId);
+      const val = (inp?.value || '').trim();
+      if (!val) return;
+      const cur = schoolSettings.horariosPorTurno[turno] || [];
+      if (!cur.includes(val)) {
+        saveSchoolSettings({
+          ...schoolSettings,
+          horariosPorTurno: {
+            ...schoolSettings.horariosPorTurno,
+            [turno]: [...cur, val]
+          }
+        });
+      }
+      if (inp) inp.value = '';
+    }
+
+    function removeHorarioConfig(turno, horario) {
+      const cur = schoolSettings.horariosPorTurno[turno] || [];
+      saveSchoolSettings({
+        ...schoolSettings,
+        horariosPorTurno: {
+          ...schoolSettings.horariosPorTurno,
+          [turno]: cur.filter(h => h !== horario)
+        }
+      });
+    }
+
+    async function confirmRenameHorarioConfig(turno, oldVal) {
+      const inp = document.getElementById('cfg-edit-horario-input');
+      const newVal = (inp?.value || '').trim();
+      cfgEditingHorario = null;
+      if (!newVal || newVal === oldVal) {
+        renderConfigHorarios();
+        return;
+      }
+
+      const curList = schoolSettings.horariosPorTurno[turno] || [];
+      const nextList = curList.map(h => (h === oldVal ? newVal : h));
+
+      // Atualizar alunos correlacionados
+      for (let i = 0; i < alunos.length; i++) {
+        if (alunos[i].turno === turno && alunos[i].horario === oldVal) {
+          alunos[i] = { ...alunos[i], horario: newVal };
+          if (supabaseClient) {
+            try { await supabaseClient.from('alunos').update({ horario: newVal }).eq('id', alunos[i].id); } catch(e) {}
+          }
+        }
+      }
+      localStorage.setItem('escola_ks_alunos', JSON.stringify(alunos));
+
+      // Atualizar professores correlacionados
+      for (let i = 0; i < professores.length; i++) {
+        const p = professores[i];
+        const horariosArr = p.horarios_aula && p.horarios_aula.length > 0
+          ? [...p.horarios_aula]
+          : (p.horario_aula ? p.horario_aula.split(',').map(s => s.trim()).filter(Boolean) : []);
+        if (horariosArr.includes(oldVal)) {
+          const nextArr = Array.from(new Set(horariosArr.map(h => (h === oldVal ? newVal : h))));
+          const nextStr = nextArr.join(', ');
+          professores[i] = { ...p, horarios_aula: nextArr, horario_aula: nextStr };
+          if (supabaseClient) {
+            try {
+              await supabaseClient.from('professores').update({ horarios_aula: nextArr, horario_aula: nextStr }).eq('id', p.id);
+            } catch(e) {}
+          }
+        }
+      }
+      localStorage.setItem('escola_ks_professores', JSON.stringify(professores));
+
+      saveSchoolSettings({
+        ...schoolSettings,
+        horariosPorTurno: {
+          ...schoolSettings.horariosPorTurno,
+          [turno]: nextList
+        }
+      });
+    }
+
+    function renderConfigInstrumentos() {
+      const grid = document.getElementById('cfg-instrumentos-grid');
+      if (!grid) return;
+      grid.innerHTML = schoolSettings.instrumentos.map(inst => {
+        const isEditing = cfgEditingInstrumento === inst;
+        if (isEditing) {
+          return `
+            <div class="flex items-center gap-1.5 bg-slate-950 border border-[#daa520] rounded-xl px-3 py-2">
+              <input type="text" id="cfg-edit-inst-input" value="${escapeHtml(inst)}" onkeydown="if(event.key==='Enter'){event.preventDefault();confirmRenameInstrumentoConfig('${escapeHtml(inst)}');}" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none">
+              <button type="button" onclick="confirmRenameInstrumentoConfig('${escapeHtml(inst)}')" class="px-2.5 py-1 rounded-lg bg-[#daa520] text-[#000000] font-bold text-xs cursor-pointer">OK</button>
+              <button type="button" onclick="cfgEditingInstrumento=null;renderConfigInstrumentos()" class="px-2 py-1 rounded-lg text-slate-400 hover:text-white text-xs cursor-pointer">✕</button>
+            </div>
+          `;
+        }
+        return `
+          <div class="flex items-center justify-between gap-2 bg-slate-950/70 border border-slate-800 rounded-xl px-3.5 py-2.5">
+            <span class="text-xs sm:text-sm font-semibold text-slate-200 truncate">${escapeHtml(inst)}</span>
+            <div class="flex items-center gap-1 shrink-0">
+              <button type="button" onclick="cfgEditingInstrumento='${escapeHtml(inst)}';renderConfigInstrumentos()" title="Editar instrumento" class="p-1 text-slate-400 hover:text-[#daa520] rounded-lg transition cursor-pointer">✏️</button>
+              <button type="button" onclick="removeInstrumentoConfig('${escapeHtml(inst)}')" title="Excluir instrumento" class="p-1 text-slate-400 hover:text-red-400 rounded-lg transition cursor-pointer">🗑️</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addInstrumentoConfig() {
+      const inp = document.getElementById('cfg-novo-instrumento');
+      const val = (inp?.value || '').trim();
+      if (!val) return;
+      if (!schoolSettings.instrumentos.some(i => i.toLowerCase() === val.toLowerCase())) {
+        saveSchoolSettings({
+          ...schoolSettings,
+          instrumentos: [...schoolSettings.instrumentos, val]
+        });
+      }
+      if (inp) inp.value = '';
+    }
+
+    function removeInstrumentoConfig(inst) {
+      saveSchoolSettings({
+        ...schoolSettings,
+        instrumentos: schoolSettings.instrumentos.filter(i => i !== inst)
+      });
+    }
+
+    async function confirmRenameInstrumentoConfig(oldVal) {
+      const inp = document.getElementById('cfg-edit-inst-input');
+      const newVal = (inp?.value || '').trim();
+      cfgEditingInstrumento = null;
+      if (!newVal || newVal === oldVal) {
+        renderConfigInstrumentos();
+        return;
+      }
+
+      const nextInsts = schoolSettings.instrumentos.map(i => (i === oldVal ? newVal : i));
+
+      // Atualizar alunos correlacionados
+      for (let i = 0; i < alunos.length; i++) {
+        if (alunos[i].instrumento === oldVal) {
+          alunos[i] = { ...alunos[i], instrumento: newVal };
+          if (supabaseClient) {
+            try { await supabaseClient.from('alunos').update({ instrumento: newVal }).eq('id', alunos[i].id); } catch(e) {}
+          }
+        }
+      }
+      localStorage.setItem('escola_ks_alunos', JSON.stringify(alunos));
+
+      // Atualizar professores correlacionados
+      for (let i = 0; i < professores.length; i++) {
+        const p = professores[i];
+        const instArr = p.instrumentos && p.instrumentos.length > 0
+          ? [...p.instrumentos]
+          : (p.instrumento ? p.instrumento.split(',').map(s => s.trim()).filter(Boolean) : []);
+        if (instArr.includes(oldVal)) {
+          const nextArr = Array.from(new Set(instArr.map(item => (item === oldVal ? newVal : item))));
+          const nextStr = nextArr.join(', ');
+          professores[i] = { ...p, instrumentos: nextArr, instrumento: nextStr };
+          if (supabaseClient) {
+            try {
+              await supabaseClient.from('professores').update({ instrumentos: nextArr, instrumento: nextStr }).eq('id', p.id);
+            } catch(e) {}
+          }
+        }
+      }
+      localStorage.setItem('escola_ks_professores', JSON.stringify(professores));
+
+      saveSchoolSettings({
+        ...schoolSettings,
+        instrumentos: nextInsts
+      });
+    }
+
+    async function commitAlunoInlineConfig(alunoId, updates) {
+      const idx = alunos.findIndex(x => String(x.id) === String(alunoId));
+      if (idx < 0) return;
+      alunos[idx] = { ...alunos[idx], ...updates };
+      localStorage.setItem('escola_ks_alunos', JSON.stringify(alunos));
+      if (supabaseClient) {
+        try { await supabaseClient.from('alunos').update(updates).eq('id', alunoId); } catch(e) {}
+      }
+      cfgSavedAlunoId = alunoId;
+      setTimeout(() => {
+        if (cfgSavedAlunoId === alunoId) {
+          cfgSavedAlunoId = null;
+          renderConfigAlunosTable();
+        }
+      }, 1500);
+      renderAlunosTable();
+      renderAniversariantes();
+      renderPagamentosTable();
+      renderHistoricoTable();
+      renderConfigAlunosTable();
+    }
+
+    function renderConfigAlunosTable() {
+      const countEl = document.getElementById('cfg-alunos-count');
+      const tbody = document.getElementById('cfg-alunos-tbody');
+      const empty = document.getElementById('cfg-alunos-empty');
+      const q = (document.getElementById('cfg-aluno-search')?.value || '').toLowerCase().trim();
+      if (countEl) countEl.textContent = alunos.length;
+      if (!tbody) return;
+
+      const list = [...alunos]
+        .filter(a => !q ||
+          a.nome_completo.toLowerCase().includes(q) ||
+          (a.instrumento || '').toLowerCase().includes(q) ||
+          (a.turno || '').toLowerCase().includes(q) ||
+          (a.horario || '').toLowerCase().includes(q)
+        )
+        .sort((a, b) => a.nome_completo.localeCompare(b.nome_completo, 'pt-BR'));
+
+      if (list.length === 0) {
+        tbody.innerHTML = '';
+        if (empty) empty.classList.remove('hidden');
+        return;
+      }
+      if (empty) empty.classList.add('hidden');
+
+      tbody.innerHTML = list.map(a => {
+        const horariosDoTurno = schoolSettings.horariosPorTurno[a.turno] || [];
+        const horarioOptions = a.horario && !horariosDoTurno.includes(a.horario)
+          ? [...horariosDoTurno, a.horario]
+          : horariosDoTurno;
+        const instOptions = a.instrumento && !schoolSettings.instrumentos.includes(a.instrumento)
+          ? [...schoolSettings.instrumentos, a.instrumento]
+          : schoolSettings.instrumentos;
+
+        return `
+          <tr class="hover:bg-slate-800/30 transition">
+            <td class="py-2.5 px-4">
+              <div class="flex items-center gap-2">
+                <input type="text" value="${escapeHtml(a.nome_completo)}" onblur="if(this.value.trim() && this.value.trim() !== '${escapeHtml(a.nome_completo)}'){commitAlunoInlineConfig('${a.id}', {nome_completo: this.value.trim()})}" onkeydown="if(event.key==='Enter')this.blur()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs sm:text-sm font-semibold text-white focus:outline-none focus:border-[#daa520]">
+                ${String(cfgSavedAlunoId) === String(a.id) ? '<span class="text-[10px] font-bold text-emerald-400 shrink-0">Salvo</span>' : ''}
+              </div>
+            </td>
+            <td class="py-2.5 px-4">
+              <input type="number" min="0" max="120" value="${a.idade}" onblur="const v=parseInt(this.value,10); if(!isNaN(v) && v>=0 && v!==${a.idade}){commitAlunoInlineConfig('${a.id}', {idade: v})}" onkeydown="if(event.key==='Enter')this.blur()" class="w-20 bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs sm:text-sm font-mono font-semibold text-white focus:outline-none focus:border-[#daa520] tabular-nums">
+            </td>
+            <td class="py-2.5 px-4">
+              <select onchange="handleConfigAlunoTurnoChange('${a.id}', this.value, '${escapeHtml(a.horario)}')" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs sm:text-sm font-medium text-white focus:outline-none focus:border-[#daa520]">
+                ${TURNOS_LIST.map(t => `<option value="${t}" ${t === a.turno ? 'selected' : ''}>${t}</option>`).join('')}
+              </select>
+            </td>
+            <td class="py-2.5 px-4">
+              <select onchange="commitAlunoInlineConfig('${a.id}', {horario: this.value})" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs sm:text-sm font-mono font-medium text-white focus:outline-none focus:border-[#daa520]">
+                ${horarioOptions.map(h => `<option value="${escapeHtml(h)}" ${h === a.horario ? 'selected' : ''}>${escapeHtml(h)}</option>`).join('')}
+              </select>
+            </td>
+            <td class="py-2.5 px-4">
+              <select onchange="commitAlunoInlineConfig('${a.id}', {instrumento: this.value})" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs sm:text-sm font-medium text-white focus:outline-none focus:border-[#daa520]">
+                ${instOptions.map(inst => `<option value="${escapeHtml(inst)}" ${inst === a.instrumento ? 'selected' : ''}>${escapeHtml(inst)}</option>`).join('')}
+              </select>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function handleConfigAlunoTurnoChange(alunoId, nextTurno, currentHorario) {
+      const nextHours = schoolSettings.horariosPorTurno[nextTurno] || [];
+      const nextHorario = nextHours.includes(currentHorario) ? currentHorario : (nextHours[0] || currentHorario);
+      commitAlunoInlineConfig(alunoId, { turno: nextTurno, horario: nextHorario });
+    }
+
+    function getProfTurnosArr(p) {
+      if (p.turnos_aula && p.turnos_aula.length > 0) return p.turnos_aula;
+      return (p.turno_aula || '').split(',').map(s => s.trim()).filter(Boolean);
+    }
+
+    function getProfHorariosArr(p) {
+      if (p.horarios_aula && p.horarios_aula.length > 0) return p.horarios_aula;
+      return (p.horario_aula || '').split(',').map(s => s.trim()).filter(Boolean);
+    }
+
+    function getProfInstrumentosArr(p) {
+      if (p.instrumentos && p.instrumentos.length > 0) return p.instrumentos;
+      return (p.instrumento || '').split(',').map(s => s.trim()).filter(Boolean);
+    }
+
+    async function commitProfessorInlineConfig(profId, updates) {
+      const idx = professores.findIndex(x => String(x.id) === String(profId));
+      if (idx < 0) return;
+      professores[idx] = { ...professores[idx], ...updates };
+      localStorage.setItem('escola_ks_professores', JSON.stringify(professores));
+      if (supabaseClient) {
+        try { await supabaseClient.from('professores').update(updates).eq('id', profId); } catch(e) {}
+      }
+      cfgSavedProfId = profId;
+      setTimeout(() => {
+        if (cfgSavedProfId === profId) {
+          cfgSavedProfId = null;
+          renderConfigProfessoresTable();
+        }
+      }, 1500);
+      renderProfessoresTable();
+      renderConfigProfessoresTable();
+    }
+
+    function addProfTurnoConfig(profId, turno) {
+      if (!turno) return;
+      const p = professores.find(x => String(x.id) === String(profId));
+      if (!p) return;
+      const cur = getProfTurnosArr(p);
+      if (cur.includes(turno)) return;
+      const next = [...cur, turno];
+      commitProfessorInlineConfig(profId, { turnos_aula: next, turno_aula: next.join(', ') });
+    }
+
+    function removeProfTurnoConfig(profId, turno) {
+      const p = professores.find(x => String(x.id) === String(profId));
+      if (!p) return;
+      const next = getProfTurnosArr(p).filter(t => t !== turno);
+      commitProfessorInlineConfig(profId, { turnos_aula: next, turno_aula: next.join(', ') });
+    }
+
+    function addProfHorarioConfig(profId, horario) {
+      if (!horario) return;
+      const p = professores.find(x => String(x.id) === String(profId));
+      if (!p) return;
+      const cur = getProfHorariosArr(p);
+      if (cur.includes(horario)) return;
+      const next = [...cur, horario].sort((a, b) => a.localeCompare(b));
+      commitProfessorInlineConfig(profId, { horarios_aula: next, horario_aula: next.join(', ') });
+    }
+
+    function removeProfHorarioConfig(profId, horario) {
+      const p = professores.find(x => String(x.id) === String(profId));
+      if (!p) return;
+      const next = getProfHorariosArr(p).filter(h => h !== horario);
+      commitProfessorInlineConfig(profId, { horarios_aula: next, horario_aula: next.join(', ') });
+    }
+
+    function addProfInstrumentoConfig(profId, inst) {
+      if (!inst) return;
+      const p = professores.find(x => String(x.id) === String(profId));
+      if (!p) return;
+      const cur = getProfInstrumentosArr(p);
+      if (cur.includes(inst)) return;
+      const next = [...cur, inst];
+      commitProfessorInlineConfig(profId, { instrumentos: next, instrumento: next.join(', ') });
+    }
+
+    function removeProfInstrumentoConfig(profId, inst) {
+      const p = professores.find(x => String(x.id) === String(profId));
+      if (!p) return;
+      const next = getProfInstrumentosArr(p).filter(i => i !== inst);
+      commitProfessorInlineConfig(profId, { instrumentos: next, instrumento: next.join(', ') });
+    }
+
+    function renderConfigProfessoresTable() {
+      const countEl = document.getElementById('cfg-professores-count');
+      const tbody = document.getElementById('cfg-professores-tbody');
+      const empty = document.getElementById('cfg-professores-empty');
+      const q = (document.getElementById('cfg-prof-search')?.value || '').toLowerCase().trim();
+      if (countEl) countEl.textContent = professores.length;
+      if (!tbody) return;
+
+      const todosHorarios = getAllHorariosConfig();
+      const list = [...professores]
+        .filter(p => !q ||
+          p.nome_completo.toLowerCase().includes(q) ||
+          (p.instrumento || '').toLowerCase().includes(q) ||
+          (p.turno_aula || '').toLowerCase().includes(q) ||
+          (p.horario_aula || '').toLowerCase().includes(q)
+        )
+        .sort((a, b) => a.nome_completo.localeCompare(b.nome_completo, 'pt-BR'));
+
+      if (list.length === 0) {
+        tbody.innerHTML = '';
+        if (empty) empty.classList.remove('hidden');
+        return;
+      }
+      if (empty) empty.classList.add('hidden');
+
+      tbody.innerHTML = list.map(p => {
+        const pTurnos = getProfTurnosArr(p);
+        const pHorarios = getProfHorariosArr(p);
+        const pInsts = getProfInstrumentosArr(p);
+        const availTurnos = TURNOS_LIST.filter(t => !pTurnos.includes(t));
+        const availHorarios = todosHorarios.filter(h => !pHorarios.includes(h));
+        const availInsts = schoolSettings.instrumentos.filter(i => !pInsts.includes(i));
+
+        return `
+          <tr class="hover:bg-slate-800/30 transition">
+            <td class="py-3 px-4">
+              <div class="space-y-1">
+                <input type="text" value="${escapeHtml(p.nome_completo)}" onblur="if(this.value.trim() && this.value.trim() !== '${escapeHtml(p.nome_completo)}'){commitProfessorInlineConfig('${p.id}', {nome_completo: this.value.trim()})}" onkeydown="if(event.key==='Enter')this.blur()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs sm:text-sm font-semibold text-white focus:outline-none focus:border-[#daa520]">
+                ${String(cfgSavedProfId) === String(p.id) ? '<span class="text-[10px] font-bold text-emerald-400 block">Alteração salva!</span>' : ''}
+              </div>
+            </td>
+            <td class="py-3 px-4 space-y-2">
+              <div class="flex flex-wrap gap-1.5">
+                ${pTurnos.length === 0 ? '<span class="text-[11px] text-slate-500 italic">Nenhum turno</span>' : pTurnos.map(t => `
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-200 border border-slate-700">
+                    <span>${escapeHtml(t)}</span>
+                    <button type="button" onclick="removeProfTurnoConfig('${p.id}', '${escapeHtml(t)}')" class="text-slate-400 hover:text-red-400 ml-0.5 cursor-pointer">✕</button>
+                  </span>
+                `).join('')}
+              </div>
+              ${availTurnos.length > 0 ? `
+                <select onchange="if(this.value)addProfTurnoConfig('${p.id}', this.value)" class="w-full bg-slate-950 border border-dashed border-[#daa520]/50 rounded-xl px-2.5 py-1 text-xs font-medium text-slate-300 focus:outline-none focus:border-[#daa520] cursor-pointer">
+                  <option value="">+ Adicionar Turno...</option>
+                  ${availTurnos.map(t => `<option value="${t}">${t}</option>`).join('')}
+                </select>
+              ` : ''}
+            </td>
+            <td class="py-3 px-4 space-y-2">
+              <div class="flex flex-wrap gap-1.5">
+                ${pHorarios.length === 0 ? '<span class="text-[11px] text-slate-500 italic">Nenhum horário</span>' : pHorarios.map(h => `
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-xs font-mono font-semibold bg-slate-800 text-slate-200 border border-slate-700">
+                    <span>⏰ ${escapeHtml(h)}</span>
+                    <button type="button" onclick="removeProfHorarioConfig('${p.id}', '${escapeHtml(h)}')" class="text-slate-400 hover:text-red-400 ml-0.5 cursor-pointer">✕</button>
+                  </span>
+                `).join('')}
+              </div>
+              ${availHorarios.length > 0 ? `
+                <select onchange="if(this.value)addProfHorarioConfig('${p.id}', this.value)" class="w-full bg-slate-950 border border-dashed border-[#daa520]/50 rounded-xl px-2.5 py-1 text-xs font-mono font-medium text-slate-300 focus:outline-none focus:border-[#daa520] cursor-pointer">
+                  <option value="">+ Adicionar Horário...</option>
+                  ${availHorarios.map(h => `<option value="${escapeHtml(h)}">${escapeHtml(h)}</option>`).join('')}
+                </select>
+              ` : ''}
+            </td>
+            <td class="py-3 px-4 space-y-2">
+              <div class="flex flex-wrap gap-1.5">
+                ${pInsts.length === 0 ? '<span class="text-[11px] text-slate-500 italic">Nenhum instrumento</span>' : pInsts.map(inst => `
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-xs font-semibold bg-[#daa520]/15 text-[#daa520] border border-[#daa520]/30">
+                    <span>${escapeHtml(inst)}</span>
+                    <button type="button" onclick="removeProfInstrumentoConfig('${p.id}', '${escapeHtml(inst)}')" class="text-[#daa520]/80 hover:text-red-400 ml-0.5 cursor-pointer">✕</button>
+                  </span>
+                `).join('')}
+              </div>
+              ${availInsts.length > 0 ? `
+                <select onchange="if(this.value)addProfInstrumentoConfig('${p.id}', this.value)" class="w-full bg-slate-950 border border-dashed border-[#daa520]/50 rounded-xl px-2.5 py-1 text-xs font-medium text-slate-300 focus:outline-none focus:border-[#daa520] cursor-pointer">
+                  <option value="">+ Adicionar Instrumento...</option>
+                  ${availInsts.map(inst => `<option value="${escapeHtml(inst)}">${escapeHtml(inst)}</option>`).join('')}
+                </select>
+              ` : ''}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
     // Inicialização ao carregar a página
     window.addEventListener('DOMContentLoaded', () => {
+      populateMelhorDiaOptions();
+      populateFiltroAlunoInstrumento();
+      populateAlunoInstrumentosSelect();
       initSupabase();
       switchTab('alunos');
     });
