@@ -2643,8 +2643,7 @@
       const contactsBlock = contactLines.length > 0 ? `
 
 📌 *Canais Oficiais da Escola:*
-${contactLines.join('
-')}` : '';
+${contactLines.join('\n')}` : '';
 
       const hash = (aluno.id ? aluno.id.toString().substring(0, 6) : 'KS') + '-' + Date.now().toString(36).toUpperCase().substring(0, 4);
       const whatsappText = `🎵 *ESCOLA DE MÚSICA KS* 🎵
